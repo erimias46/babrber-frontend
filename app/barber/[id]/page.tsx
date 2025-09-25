@@ -17,6 +17,7 @@ import {
   Route,
   Calculator,
   Navigation,
+  CheckCircle,
 } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -204,7 +205,6 @@ export default function BarberProfilePage() {
     console.log("[BOOKING][CLIENT] Submitting createRequest:", {
       barberId: params.id,
       serviceId: (selectedServiceData as any)?._id || selectedService,
-      scheduledTime,
       location: {
         type: "Point",
         coordinates: userCoordinates,

@@ -17,6 +17,7 @@ import {
 import { useState } from "react";
 import { NotificationsBell } from "@/components/layout/NotificationsBell";
 import { useChat } from "@/lib/hooks/useChat";
+import { Chat } from "@/types";
 
 export function Navbar() {
   const { user, logout } = useAuth();
@@ -39,7 +40,7 @@ export function Navbar() {
 
   // Calculate total unread messages
   const totalUnreadMessages = chats.reduce(
-    (sum, chat) => sum + (chat.unreadCount || 0),
+    (sum: number, chat: Chat) => sum + (chat.unreadCount || 0),
     0
   );
 

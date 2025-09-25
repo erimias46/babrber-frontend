@@ -10,7 +10,9 @@ import { Input } from "@/components/ui/Input";
 
 export default function ReviewsPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterRating, setFilterRating] = useState<number | null>(null);
+  const [filterRating, setFilterRating] = useState<number | undefined>(
+    undefined
+  );
   const [sortBy, setSortBy] = useState<"newest" | "oldest" | "rating">(
     "newest"
   );
@@ -63,7 +65,7 @@ export default function ReviewsPage() {
                   value={filterRating || ""}
                   onChange={(e) =>
                     setFilterRating(
-                      e.target.value ? Number(e.target.value) : null
+                      e.target.value ? Number(e.target.value) : undefined
                     )
                   }
                   className="w-full p-2 border border-gray-300 rounded-md"

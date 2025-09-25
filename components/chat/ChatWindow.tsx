@@ -5,6 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowLeft, Send, Smile } from "lucide-react";
 import { useChat } from "@/lib/hooks/useChat";
 import { useAuth } from "@/lib/auth/AuthContext";
+import { Message } from "@/types";
+
+interface OptimisticMessage extends Message {
+  isOptimistic?: boolean;
+}
 
 interface ChatWindowProps {
   chatId: string;
@@ -200,13 +205,14 @@ export function ChatWindow({ chatId, onClose, onBack }: ChatWindowProps) {
                 </div>
 
                 {/* Messages */}
-                {dayMessages.map((message, index) => {
+                {(dayMessages as OptimisticMessage[]).map((message, index) => {
                   const isOwn =
                     message.sender._id === user?._id ||
                     message.sender._id === "current_user";
                   const showAvatar =
                     index === 0 ||
-                    dayMessages[index - 1]?.sender._id !== message.sender._id;
+                    (dayMessages as OptimisticMessage[])[index - 1]?.sender
+                      ._id !== message.sender._id;
                   const isOptimistic = message.isOptimistic;
 
                   return (

@@ -29,8 +29,11 @@ export const useChat = (chatId?: string) => {
   });
 
   // Combine server messages with optimistic messages
-  const allMessages = chatId 
-    ? [...(messages?.data || []), ...optimisticMessages.filter(m => m.chatId === chatId)]
+  const allMessages = chatId
+    ? [
+        ...(messages?.data || []),
+        ...optimisticMessages.filter((m) => m.chatId === chatId),
+      ]
     : [];
 
   // Create or get chat
@@ -57,8 +60,18 @@ export const useChat = (chatId?: string) => {
       const optimisticMessage = {
         _id: `temp_${Date.now()}`,
         chat: chatId,
-        sender: { _id: "current_user", firstName: "You", lastName: "", profilePicture: "" },
-        recipient: { _id: "recipient", firstName: "", lastName: "", profilePicture: "" },
+        sender: {
+          _id: "current_user",
+          firstName: "You",
+          lastName: "",
+          profilePicture: "",
+        },
+        recipient: {
+          _id: "recipient",
+          firstName: "",
+          lastName: "",
+          profilePicture: "",
+        },
         content,
         createdAt: new Date().toISOString(),
         read: false,
@@ -67,22 +80,27 @@ export const useChat = (chatId?: string) => {
       };
 
       // Add to optimistic messages
-      setOptimisticMessages(prev => [...prev, optimisticMessage]);
+      setOptimisticMessages((prev) => [...prev, optimisticMessage]);
 
       return { optimisticMessage };
     },
     onSuccess: (response, { chatId }) => {
       // Remove optimistic message and let socket handle the real update
-      setOptimisticMessages(prev => 
-        prev.filter(m => !(m.chatId === chatId && m.isOptimistic))
+      setOptimisticMessages((prev) =>
+        prev.filter((m) => !(m.chatId === chatId && m.isOptimistic))
       );
     },
     onError: (error, { chatId, content }) => {
       // Remove failed optimistic message
-      setOptimisticMessages(prev => 
-        prev.filter(m => !(m.chatId === chatId && m.content === content && m.isOptimistic))
+      setOptimisticMessages((prev) =>
+        prev.filter(
+          (m) =>
+            !(m.chatId === chatId && m.content === content && m.isOptimistic)
+        )
       );
-      toast.error(error.response?.data?.message || "Failed to send message");
+      toast.error(
+        (error as any)?.response?.data?.message || "Failed to send message"
+      );
     },
   });
 
@@ -108,10 +126,13 @@ export const useChat = (chatId?: string) => {
       if (data.chatId === chatId) {
         // Add new message to optimistic messages if it's not from current user
         if (data.message.sender._id !== "current_user") {
-          setOptimisticMessages(prev => [...prev, { ...data.message, chatId: data.chatId }]);
+          setOptimisticMessages((prev) => [
+            ...prev,
+            { ...data.message, chatId: data.chatId },
+          ]);
         }
       }
-      
+
       // Update chats list to show latest message
       queryClient.invalidateQueries({ queryKey: ["chats"] });
     };
@@ -132,9 +153,9 @@ export const useChat = (chatId?: string) => {
     const handleMessageRead = (data: any) => {
       if (data.chatId === chatId) {
         // Update read status in optimistic messages
-        setOptimisticMessages(prev => 
-          prev.map(msg => 
-            msg.chatId === data.chatId && msg.sender._id !== "current_user" 
+        setOptimisticMessages((prev) =>
+          prev.map((msg) =>
+            msg.chatId === data.chatId && msg.sender._id !== "current_user"
               ? { ...msg, read: true }
               : msg
           )
@@ -181,13 +202,13 @@ export const useChat = (chatId?: string) => {
   // Helper functions
   const createChat = (participantId: string) =>
     createChatMutation.mutateAsync(participantId);
-    
+
   const sendMessage = (content: string) => {
     if (chatId) {
       sendMessageMutation.mutate({ chatId, content });
     }
   };
-  
+
   const markAsRead = (chatId: string) => markAsReadMutation.mutate(chatId);
 
   // Delete chat mutation

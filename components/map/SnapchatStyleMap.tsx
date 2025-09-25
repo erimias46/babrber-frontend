@@ -395,14 +395,17 @@ export function SnapchatStyleMap({
       {mapState.isLoaded && mapInstanceRef.current && (
         <>
           {console.log("🎯 Rendering markers:", markersData.length)}
-          {markersData.map((marker) => (
-            <EnhancedMarker
-              key={marker.id}
-              map={mapInstanceRef.current}
-              marker={marker}
-              currentUser={currentUser}
-            />
-          ))}
+          {markersData.map(
+            (marker) =>
+              currentUser && (
+                <EnhancedMarker
+                  key={marker.id}
+                  map={mapInstanceRef.current}
+                  marker={marker}
+                  currentUser={currentUser}
+                />
+              )
+          )}
         </>
       )}
     </div>

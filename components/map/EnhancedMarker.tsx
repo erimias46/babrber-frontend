@@ -7,6 +7,16 @@ import { Star, X, Clock, Sparkles } from "lucide-react";
 import Link from "next/link";
 import BarberDetailModal from "./BarberDetailModal";
 import { useRouter } from "next/navigation";
+import { User } from "@/types";
+
+interface MarkerComponentProps {
+  user: User;
+  onClick: () => void;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+  isHovered: boolean;
+  isCurrentUser: boolean;
+}
 
 const MarkerComponent = ({
   user,
@@ -15,7 +25,7 @@ const MarkerComponent = ({
   onMouseLeave,
   isHovered,
   isCurrentUser,
-}) => {
+}: MarkerComponentProps) => {
   const isActive = user.isOnline;
   const price =
     user.services && user.services.length > 0
@@ -123,7 +133,17 @@ const MarkerComponent = ({
   );
 };
 
-export function EnhancedMarker({ map, marker, currentUser }) {
+interface EnhancedMarkerProps {
+  map: any; // Google Maps map object
+  marker: any; // Google Maps marker object
+  currentUser: User;
+}
+
+export function EnhancedMarker({
+  map,
+  marker,
+  currentUser,
+}: EnhancedMarkerProps) {
   const [element, setElement] = useState<HTMLDivElement | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [showModal, setShowModal] = useState(false);

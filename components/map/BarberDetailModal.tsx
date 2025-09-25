@@ -28,8 +28,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useLocation } from "@/lib/hooks/useLocation";
 import { useAuth } from "@/lib/auth/AuthContext";
+import { Barber, Service } from "@/types";
 
-const BarberDetailModal = ({ barber, onClose }) => {
+interface BarberDetailModalProps {
+  barber: Barber;
+  onClose: () => void;
+}
+
+const BarberDetailModal = ({ barber, onClose }: BarberDetailModalProps) => {
   const [activeTab, setActiveTab] = useState("info");
   const [showChat, setShowChat] = useState(false);
   const [chatId, setChatId] = useState<string | null>(null);
@@ -99,8 +105,8 @@ const BarberDetailModal = ({ barber, onClose }) => {
 
   const handleStartChat = async () => {
     try {
-      const chat = await createChat(barber._id);
-      setChatId(chat._id);
+      const response = await createChat(barber._id);
+      setChatId(response.data._id);
       setShowChat(true);
     } catch (error) {
       console.error("Failed to start chat:", error);
@@ -238,7 +244,7 @@ const BarberDetailModal = ({ barber, onClose }) => {
                   <div className="flex items-center space-x-2">
                     <MapPin size={16} className="text-blue-400" />
                     <span>
-                      {barber.location.address || "Address not available"}
+                      {barber.location?.address || "Address not available"}
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -433,6 +439,14 @@ const BarberDetailModal = ({ barber, onClose }) => {
   );
 };
 
+interface BookingFormModalProps {
+  service: Service;
+  barber: Barber;
+  onSubmit: (data: any) => void;
+  onClose: () => void;
+  isLoading: boolean;
+}
+
 // Booking Form Modal Component
 const BookingFormModal = ({
   service,
@@ -440,7 +454,7 @@ const BookingFormModal = ({
   onSubmit,
   onClose,
   isLoading,
-}) => {
+}: BookingFormModalProps) => {
   const [formData, setFormData] = useState({
     scheduledTime: "",
     notes: "",
