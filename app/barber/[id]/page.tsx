@@ -72,9 +72,6 @@ export default function BarberProfilePage() {
         throw error;
       }
     },
-    onError: (error) => {
-      console.error("Error fetching reviews:", error);
-    },
     retry: 1,
   });
 

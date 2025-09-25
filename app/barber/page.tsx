@@ -714,7 +714,7 @@ export default function BarberDashboard() {
                             "🧪 Barber Dashboard: Testing Stripe connection..."
                           );
                           const res = await apiClient.get("/stripe/test");
-                          const data = await res.json();
+                          const data = res.data;
                           console.log("🧪 Stripe test result:", data);
                           toast.success(
                             `Stripe test: ${
@@ -1549,27 +1549,31 @@ export default function BarberDashboard() {
 
                 {showMap && user.location && (
                   <SnapchatStyleMap
-                    center={[
+                    userLocation={[
                       user.location.coordinates[1],
                       user.location.coordinates[0],
                     ]}
-                    markers={[
+                    barbers={[
                       {
-                        id: "barber",
-                        position: [
-                          user.location.coordinates[1],
-                          user.location.coordinates[0],
-                        ],
-                        title: "Your Location",
-                        type: "barber",
-                        emoji: "💇‍♂️",
-                        rating: 4.8,
-                        isOpen: isOnline,
-                        userCount: 1,
+                        ...user,
+                        role: "barber" as const,
+                        specialties: user.specialties || [],
+                        services: user.services || [],
+                        workingHours: user.workingHours || {},
+                        isApproved: user.isApproved || false,
+                        isOnline: isOnline,
+                        documents: user.documents || [],
+                        rating: user.rating || 4.8,
+                        totalRatings: user.totalRatings || 0,
+                        email: user.email,
+                        password: user.password,
+                        phone: user.phone,
+                        isActive: user.isActive,
+                        createdAt: user.createdAt,
+                        updatedAt: user.updatedAt,
                       },
                     ]}
-                    height="400px"
-                    className="rounded-lg border"
+                    currentUser={user}
                   />
                 )}
               </div>
@@ -1642,7 +1646,7 @@ export default function BarberDashboard() {
                           </Button>
                           <Button
                             size="sm"
-                            variant="outline"
+                            variant="secondary"
                             className="text-red-600 hover:bg-red-50"
                             onClick={() => handleDeleteService(index)}
                           >
@@ -2039,7 +2043,7 @@ export default function BarberDashboard() {
                         )}
                       </div>
                       <Button
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
                         onClick={() => deleteBlockMutation.mutate(b._id)}
                         className="text-red-600 hover:bg-red-50"
@@ -2170,7 +2174,7 @@ export default function BarberDashboard() {
                   : "Add Service"}
               </Button>
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={resetServiceForm}
                 className="flex-1"
               >
@@ -2246,7 +2250,7 @@ export default function BarberDashboard() {
                     </div>
                   )}
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => setShowAvailabilityLocationPicker(true)}
                   >
@@ -2254,7 +2258,7 @@ export default function BarberDashboard() {
                   </Button>
                   {availabilityForm.location && (
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       onClick={() =>
                         setAvailabilityForm({
@@ -2303,7 +2307,7 @@ export default function BarberDashboard() {
                 {editingBlockId ? "Update" : "Save"}
               </Button>
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={() => {
                   setShowAvailabilityModal(false);
                   setEditingBlockId(null);
@@ -2330,19 +2334,21 @@ export default function BarberDashboard() {
                 <h3 className="text-lg font-semibold">Deposit Settings</h3>
                 <div
                   className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    user?.requireDeposit !== false
+                    (user as any)?.requireDeposit !== false
                       ? "bg-green-100 text-green-800"
                       : "bg-gray-100 text-gray-800"
                   }`}
                 >
-                  {user?.requireDeposit !== false ? "Enabled" : "Disabled"}
+                  {(user as any)?.requireDeposit !== false
+                    ? "Enabled"
+                    : "Disabled"}
                 </div>
               </div>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Deposit Type:</span>
                   <span className="text-sm font-medium">
-                    {user?.depositType === "fixed"
+                    {(user as any)?.depositType === "fixed"
                       ? "Fixed Amount"
                       : "Percentage"}
                   </span>
@@ -2350,9 +2356,9 @@ export default function BarberDashboard() {
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Deposit Value:</span>
                   <span className="text-sm font-medium">
-                    {user?.depositType === "fixed"
-                      ? `$${(user?.depositValue || 0) / 100}`
-                      : `${user?.depositValue || 0}%`}
+                    {(user as any)?.depositType === "fixed"
+                      ? `$${((user as any)?.depositValue || 0) / 100}`
+                      : `${(user as any)?.depositValue || 0}%`}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -2360,7 +2366,9 @@ export default function BarberDashboard() {
                     Inherit from Admin:
                   </span>
                   <span className="text-sm font-medium">
-                    {user?.inheritDepositFromAdmin !== false ? "Yes" : "No"}
+                    {(user as any)?.inheritDepositFromAdmin !== false
+                      ? "Yes"
+                      : "No"}
                   </span>
                 </div>
               </div>
@@ -2403,7 +2411,7 @@ export default function BarberDashboard() {
                         const response = await apiClient.post(
                           "/stripe/connect/onboard"
                         );
-                        const data = await response.json();
+                        const data = response.data;
                         if (data.success && data.url) {
                           window.open(data.url, "_blank");
                         } else {
