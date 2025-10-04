@@ -45,7 +45,7 @@ export function Navbar() {
   );
 
   return (
-    <nav className="glass sticky top-0 z-50 backdrop-blur-xl border-b border-white/20">
+    <nav className="bg-white/95 backdrop-blur-xl sticky top-0 z-50 border-b border-gray-200 shadow-sm">
       <div className="container-responsive">
         <div className="flex justify-between h-16 sm:h-20 items-center">
           {/* Logo and Brand */}
@@ -138,8 +138,8 @@ export function Navbar() {
                 </div>
               </button>
               {showDropdown && (
-                <div className="absolute right-0 mt-3 w-64 glass rounded-2xl shadow-xl py-2 z-50 border border-white/20">
-                  <div className="px-4 py-3 border-b border-white/10">
+                <div className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-xl py-2 z-50 border border-gray-200">
+                  <div className="px-4 py-3 border-b border-gray-200">
                     <div className="flex items-center space-x-3">
                       <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
                         <User className="w-6 h-6 text-white" />
@@ -205,8 +205,8 @@ export function Navbar() {
               </div>
             </button>
             {showDropdown && (
-              <div className="absolute right-0 mt-3 w-64 glass rounded-2xl shadow-xl py-2 z-50 border border-white/20 top-full">
-                <div className="px-4 py-3 border-b border-white/10">
+              <div className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-xl py-2 z-50 border border-gray-200 top-full">
+                <div className="px-4 py-3 border-b border-gray-200">
                   <div className="flex items-center space-x-3">
                     <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
                       <User className="w-6 h-6 text-white" />

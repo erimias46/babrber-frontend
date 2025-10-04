@@ -291,38 +291,36 @@ export default function DashboardPage() {
       </div>
 
       {/* Info overlay showing number of barbers found */}
-      <div className="absolute top-20 sm:top-24 left-2 sm:left-4 z-20">
-        <div className="bg-gray-800/90 backdrop-blur-sm text-white px-3 sm:px-4 py-2 rounded-lg shadow-lg border border-gray-700 max-w-[200px] sm:max-w-none">
-          <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-blue-400 flex-shrink-0" />
+      <div className="absolute top-20 sm:top-24 left-2 sm:left-4 z-20 max-w-[calc(100vw-1rem)] sm:max-w-none">
+        <div className="bg-gray-800/95 backdrop-blur-sm text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow-lg border border-gray-700">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400 flex-shrink-0" />
             <span className="text-xs sm:text-sm font-medium truncate">
               {hasBarbers
-                ? `${barbers.length} barber${
-                    barbers.length !== 1 ? "s" : ""
-                  } found`
-                : "No barbers found"}
+                ? `${barbers.length} barber${barbers.length !== 1 ? "s" : ""}`
+                : "No barbers"}
             </span>
           </div>
-          <div className="text-xs text-gray-400 mt-1">
+          <div className="text-[10px] sm:text-xs text-gray-400 mt-0.5 sm:mt-1 truncate">
             {hasBarbers
-              ? `${barbers.filter((b: Barber) => b.isOnline).length} online now`
-              : "No barbers available in your area"}
+              ? `${barbers.filter((b: Barber) => b.isOnline).length} online`
+              : "Check back later"}
           </div>
         </div>
       </div>
 
       {/* Warning if no barbers */}
       {!hasBarbers && (
-        <div className="absolute top-28 sm:top-32 left-2 sm:left-4 z-20">
-          <div className="bg-yellow-600/90 backdrop-blur-sm text-white px-3 sm:px-4 py-2 rounded-lg shadow-lg border border-yellow-500 max-w-[200px] sm:max-w-none">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+        <div className="absolute top-28 sm:top-32 left-2 sm:left-4 z-20 max-w-[calc(100vw-1rem)] sm:max-w-none">
+          <div className="bg-yellow-600/95 backdrop-blur-sm text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow-lg border border-yellow-500">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
               <span className="text-xs sm:text-sm font-medium">
-                No barbers found in your area
+                No barbers nearby
               </span>
             </div>
-            <div className="text-xs text-yellow-200 mt-1">
-              Try expanding your search radius or check back later
+            <div className="text-[10px] sm:text-xs text-yellow-200 mt-0.5 sm:mt-1 truncate">
+              Check back later
             </div>
           </div>
         </div>
@@ -330,20 +328,20 @@ export default function DashboardPage() {
 
       {/* Error warning if API failed */}
       {hasBarberError && (
-        <div className="absolute top-36 sm:top-40 left-2 sm:left-4 z-20">
-          <div className="bg-red-600/90 backdrop-blur-sm text-white px-3 sm:px-4 py-2 rounded-lg shadow-lg border border-red-500 max-w-[200px] sm:max-w-none">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+        <div className="absolute top-36 sm:top-40 left-2 sm:left-4 z-20 max-w-[calc(100vw-1rem)] sm:max-w-none">
+          <div className="bg-red-600/95 backdrop-blur-sm text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow-lg border border-red-500">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
               <span className="text-xs sm:text-sm font-medium">API Error</span>
             </div>
-            <div className="text-xs text-red-200 mt-1">
+            <div className="text-[10px] sm:text-xs text-red-200 mt-0.5 sm:mt-1 line-clamp-2">
               {barbersError instanceof Error
                 ? barbersError.message
-                : "Failed to fetch barbers"}
+                : "Failed to fetch"}
             </div>
             <button
               onClick={handleRetry}
-              className="mt-2 bg-red-700 hover:bg-red-800 text-white px-2 sm:px-3 py-1 rounded text-xs transition-colors"
+              className="mt-1.5 sm:mt-2 bg-red-700 hover:bg-red-800 text-white px-2 sm:px-3 py-1 rounded text-[10px] sm:text-xs transition-colors w-full"
             >
               Retry
             </button>
@@ -353,15 +351,15 @@ export default function DashboardPage() {
 
       {/* Debug info overlay (only in development) */}
       {process.env.NODE_ENV === "development" && (
-        <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 z-20">
-          <div className="bg-gray-800/90 backdrop-blur-sm text-white px-2 sm:px-3 py-2 rounded-lg shadow-lg border border-gray-700 text-xs max-w-[180px] sm:max-w-none">
+        <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 z-20 max-w-[calc(50vw-1rem)] sm:max-w-none">
+          <div className="bg-gray-800/95 backdrop-blur-sm text-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg shadow-lg border border-gray-700 text-[10px] sm:text-xs">
             <div className="truncate">
-              📍 Coords: {coordinates?.join(", ") || "None"}
+              📍 {coordinates?.join(", ") || "No coords"}
             </div>
             <div className="truncate">
-              👤 User: {currentUserForMap?.firstName || "Unknown"}
+              👤 {currentUserForMap?.firstName || "Unknown"}
             </div>
-            <div className="truncate">✂️ Barbers: {barbers?.length || 0}</div>
+            <div className="truncate">✂️ {barbers?.length || 0} barbers</div>
           </div>
         </div>
       )}
@@ -371,10 +369,11 @@ export default function DashboardPage() {
         <div className="flex flex-col gap-2">
           <button
             onClick={handleRetry}
-            className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-colors touch-target"
+            className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white p-2.5 sm:p-3 rounded-full shadow-lg transition-colors touch-target"
             title="Refresh barbers"
+            aria-label="Refresh barbers"
           >
-            <RefreshCw className="w-5 h-5" />
+            <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
       </div>

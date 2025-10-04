@@ -207,11 +207,12 @@ export default function RequestsPage() {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <div className="flex space-x-2 border-b mb-6">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="mb-6 sm:mb-8">
+          {/* Responsive tabs with horizontal scroll */}
+          <div className="flex gap-2 border-b mb-4 sm:mb-6 overflow-x-auto scrollbar-hide">
             <button
-              className={`px-4 py-2 font-semibold border-b-2 transition-colors ${
+              className={`px-3 sm:px-4 py-2 font-semibold border-b-2 transition-colors whitespace-nowrap text-sm sm:text-base ${
                 activeTab === "requests"
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-gray-500 hover:text-blue-600"
@@ -221,7 +222,7 @@ export default function RequestsPage() {
               My Requests
             </button>
             <button
-              className={`px-4 py-2 font-semibold border-b-2 transition-colors ${
+              className={`px-3 sm:px-4 py-2 font-semibold border-b-2 transition-colors whitespace-nowrap text-sm sm:text-base ${
                 activeTab === "barbers"
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-gray-500 hover:text-blue-600"
@@ -233,19 +234,19 @@ export default function RequestsPage() {
           </div>
         </div>
         {activeTab === "requests" && (
-          <div className="mb-12">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-4xl font-bold gradient-text mb-2">
+          <div className="mb-8 sm:mb-12">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="min-w-0">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text mb-1 sm:mb-2">
                   My Requests
                 </h1>
-                <p className="text-gray-600 text-lg">
+                <p className="text-sm sm:text-base md:text-lg text-gray-600">
                   Track your haircut bookings and appointments
                 </p>
               </div>
-              <div className="flex items-center space-x-3">
-                <div className="badge badge-info">
-                  {requestsArray.length} Total Requests
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <div className="badge badge-info text-xs sm:text-sm">
+                  {requestsArray.length} Total
                 </div>
                 {/* Socket connection indicator */}
                 <div
@@ -261,16 +262,23 @@ export default function RequestsPage() {
                   variant="secondary"
                   size="sm"
                   onClick={handleManualRefresh}
-                  className="shadow-md"
+                  className="shadow-md touch-target"
                   title="Refresh requests"
                 >
                   <RefreshCw className="w-4 h-4" />
                 </Button>
                 <Button
                   onClick={() => (window.location.href = "/dashboard")}
-                  className="shadow-lg"
+                  className="shadow-lg hidden sm:flex"
                 >
                   <MapPin className="w-4 h-4 mr-2" /> Find More Barbers
+                </Button>
+                <Button
+                  onClick={() => (window.location.href = "/dashboard")}
+                  className="shadow-lg sm:hidden"
+                  size="sm"
+                >
+                  <MapPin className="w-4 h-4" />
                 </Button>
               </div>
             </div>
@@ -285,60 +293,61 @@ export default function RequestsPage() {
                 ))}
               </div>
             ) : requestsArray.length === 0 ? (
-              <div className="card text-center py-16">
+              <div className="card text-center py-12 sm:py-16">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-32 h-32 bg-blue-100 rounded-full opacity-20"></div>
+                    <div className="w-24 h-24 sm:w-32 sm:h-32 bg-blue-100 rounded-full opacity-20"></div>
                   </div>
-                  <Clock className="w-20 h-20 text-blue-400 mx-auto mb-6 relative z-10" />
+                  <Clock className="w-16 h-16 sm:w-20 sm:h-20 text-blue-400 mx-auto mb-4 sm:mb-6 relative z-10" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">
                   No requests yet
                 </h3>
-                <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto px-4">
                   Start your journey by finding skilled barbers in your area and
                   sending your first request.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
                   <Button
                     onClick={() => (window.location.href = "/dashboard")}
-                    className="shadow-lg"
+                    className="shadow-lg w-full sm:w-auto"
                   >
                     <MapPin className="w-4 h-4 mr-2" /> Find Barbers
                   </Button>
                   <Button
                     variant="secondary"
                     onClick={() => (window.location.href = "/profile")}
+                    className="w-full sm:w-auto"
                   >
                     <User className="w-4 h-4 mr-2" /> Complete Profile
                   </Button>
                 </div>
               </div>
             ) : (
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {requestsArray.map((request: any) => (
-                  <div key={request._id} className="card card-hover">
+                  <div key={request._id} className="card card-hover p-4 sm:p-6">
                     <div className="flex items-start justify-between">
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         {/* Header with Barber Info and Status */}
-                        <div className="flex items-center justify-between mb-6">
-                          <div className="flex items-center space-x-4">
-                            <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
-                              <User className="w-7 h-7 text-white" />
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3">
+                          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center flex-shrink-0">
+                              <User className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                             </div>
-                            <div>
-                              <h3 className="text-xl font-bold text-gray-900">
+                            <div className="min-w-0 flex-1">
+                              <h3 className="text-base sm:text-xl font-bold text-gray-900 truncate">
                                 {request.barberId.firstName}{" "}
                                 {request.barberId.lastName}
                               </h3>
                               {request.barberId.businessName && (
-                                <p className="text-gray-600 font-medium">
+                                <p className="text-sm sm:text-base text-gray-600 font-medium truncate">
                                   {request.barberId.businessName}
                                 </p>
                               )}
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             {request.depositRequired &&
                             request.depositPaidAmount ? (
                               <div className="badge bg-green-100 text-green-800 text-sm font-semibold">
@@ -356,15 +365,15 @@ export default function RequestsPage() {
                         </div>
 
                         {/* Details */}
-                        <div className="grid md:grid-cols-2 gap-6 mb-6">
-                          <div className="space-y-3">
-                            <div className="flex items-center text-gray-600">
-                              <DollarSign className="w-5 h-5 mr-3 text-green-600" />
-                              <div>
-                                <span className="text-sm font-medium">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
+                          <div className="space-y-2 sm:space-y-3">
+                            <div className="flex items-center text-gray-600 gap-2 sm:gap-3">
+                              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+                              <div className="min-w-0 flex-1">
+                                <span className="text-xs sm:text-sm font-medium block">
                                   Service
                                 </span>
-                                <p className="text-gray-900">
+                                <p className="text-xs sm:text-sm text-gray-900 truncate">
                                   {(() => {
                                     const services =
                                       request.barberId?.services || [];
@@ -382,13 +391,13 @@ export default function RequestsPage() {
                                 </p>
                               </div>
                             </div>
-                            <div className="flex items-center text-gray-600">
-                              <Clock className="w-5 h-5 mr-3 text-blue-600" />
-                              <div>
-                                <span className="text-sm font-medium">
+                            <div className="flex items-center text-gray-600 gap-2 sm:gap-3">
+                              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
+                              <div className="min-w-0 flex-1">
+                                <span className="text-xs sm:text-sm font-medium block">
                                   Requested
                                 </span>
-                                <p className="text-gray-900">
+                                <p className="text-xs sm:text-sm text-gray-900">
                                   {new Date(
                                     request.createdAt
                                   ).toLocaleDateString()}
@@ -396,15 +405,15 @@ export default function RequestsPage() {
                               </div>
                             </div>
                           </div>
-                          <div className="space-y-3">
+                          <div className="space-y-2 sm:space-y-3">
                             {request.scheduledTime && (
-                              <div className="flex items-center text-gray-600">
-                                <Clock className="w-5 h-5 mr-3 text-purple-600" />
-                                <div>
-                                  <span className="text-sm font-medium">
+                              <div className="flex items-center text-gray-600 gap-2 sm:gap-3">
+                                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 flex-shrink-0" />
+                                <div className="min-w-0 flex-1">
+                                  <span className="text-xs sm:text-sm font-medium block">
                                     Scheduled
                                   </span>
-                                  <p className="text-gray-900">
+                                  <p className="text-xs sm:text-sm text-gray-900">
                                     {new Date(
                                       request.scheduledTime
                                     ).toLocaleString()}
@@ -413,13 +422,13 @@ export default function RequestsPage() {
                               </div>
                             )}
                             {request.location?.address && (
-                              <div className="flex items-center text-gray-600">
-                                <MapPin className="w-5 h-5 mr-3 text-red-600" />
-                                <div>
-                                  <span className="text-sm font-medium">
+                              <div className="flex items-center text-gray-600 gap-2 sm:gap-3">
+                                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0" />
+                                <div className="min-w-0 flex-1">
+                                  <span className="text-xs sm:text-sm font-medium block">
                                     Location
                                   </span>
-                                  <p className="text-gray-900 text-sm">
+                                  <p className="text-xs sm:text-sm text-gray-900 break-words">
                                     {request.location.address}
                                   </p>
                                 </div>
@@ -433,11 +442,11 @@ export default function RequestsPage() {
                           request.status === "rescheduled" ||
                           request.status === "completed") &&
                           request.amount && (
-                            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                              <h4 className="text-sm font-semibold text-gray-900 mb-3">
+                            <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
+                              <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-2 sm:mb-3">
                                 Payment Details
                               </h4>
-                              <div className="grid md:grid-cols-2 gap-4">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div className="space-y-2">
                                   {request.depositRequired ? (
                                     <>
@@ -588,11 +597,11 @@ export default function RequestsPage() {
                           )}
 
                         {/* Actions */}
-                        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between pt-3 sm:pt-4 border-t border-gray-100 gap-3">
                           <div className="text-xs text-gray-500 font-mono">
                             ID: {request._id.slice(-8)}
                           </div>
-                          <div className="flex items-center space-x-3">
+                          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                             {request.status === "pending" && (
                               <Button
                                 variant="danger"
@@ -603,9 +612,10 @@ export default function RequestsPage() {
                                   })
                                 }
                                 loading={cancelRequestMutation.isPending}
-                                className="shadow-md"
+                                className="shadow-md text-xs sm:text-sm"
                               >
-                                <X className="w-4 h-4 mr-2" /> Cancel
+                                <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />{" "}
+                                Cancel
                               </Button>
                             )}
                             {(request.status === "accepted" ||
@@ -746,7 +756,7 @@ export default function RequestsPage() {
                               onClick={() =>
                                 (window.location.href = `/barber/${request.barberId._id}`)
                               }
-                              className="shadow-md"
+                              className="shadow-md text-xs sm:text-sm"
                             >
                               View Barber
                             </Button>
@@ -775,7 +785,7 @@ export default function RequestsPage() {
                 No online barbers found near you.
               </div>
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {barbersArray.map((barber: any) => {
                   const distance =
                     barber.location?.coordinates &&

@@ -70,7 +70,11 @@ export default function ProfilePage() {
   const updateLocationMutation = useMutation({
     mutationFn: (data: { coordinates: [number, number]; address?: string }) =>
       api.updateLocation(data),
-    onSuccess: () => {
+    onSuccess: (response) => {
+      // Update user context with the latest location data from API response
+      const updatedUser = response.data.data;
+      updateUser(updatedUser);
+
       toast.success("Location updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       setShowLocationPicker(false);
@@ -245,57 +249,65 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Profile Settings</h1>
-          <p className="text-gray-600 mt-2">Manage your account information</p>
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Profile Settings
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-2">
+            Manage your account information
+          </p>
         </div>
 
-        <div className="flex space-x-1 mb-8">
+        {/* Responsive tabs with horizontal scroll on mobile */}
+        <div className="flex gap-2 mb-6 sm:mb-8 overflow-x-auto scrollbar-hide pb-2">
           <button
             onClick={() => setActiveTab("personal")}
-            className={`px-4 py-2 rounded-lg font-medium ${
+            className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
               activeTab === "personal"
                 ? "bg-primary-600 text-white"
                 : "bg-white text-gray-700 hover:bg-gray-50"
             }`}
           >
-            <User className="w-4 h-4 inline mr-2" /> Personal Info
+            <User className="w-4 h-4" />
+            <span className="text-sm sm:text-base">Personal Info</span>
           </button>
 
           <button
             onClick={() => setActiveTab("location")}
-            className={`px-4 py-2 rounded-lg font-medium ${
+            className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
               activeTab === "location"
                 ? "bg-primary-600 text-white"
                 : "bg-white text-gray-700 hover:bg-gray-50"
             }`}
           >
-            <MapPin className="w-4 h-4 inline mr-2" /> Location
+            <MapPin className="w-4 h-4" />
+            <span className="text-sm sm:text-base">Location</span>
           </button>
 
           {user?.role === "barber" && (
             <button
               onClick={() => setActiveTab("business")}
-              className={`px-4 py-2 rounded-lg font-medium ${
+              className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
                 activeTab === "business"
                   ? "bg-primary-600 text-white"
                   : "bg-white text-gray-700 hover:bg-gray-50"
               }`}
             >
-              <Briefcase className="w-4 h-4 inline mr-2" /> Business Info
+              <Briefcase className="w-4 h-4" />
+              <span className="text-sm sm:text-base">Business Info</span>
             </button>
           )}
         </div>
 
         <form onSubmit={handleSubmit}>
           {activeTab === "personal" && (
-            <Card>
-              <h2 className="text-xl font-semibold mb-6">
+            <Card className="p-4 sm:p-6">
+              <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6">
                 Personal Information
               </h2>
 
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <Input
                   label="First Name"
                   name="firstName"
@@ -329,15 +341,19 @@ export default function ProfilePage() {
                 />
               </div>
 
-              <div className="mt-6 grid md:grid-cols-2 gap-6">
-                <div className="text-center py-8 text-gray-500">
-                  <Image className="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                  <p className="text-sm">Avatar upload temporarily disabled</p>
-                </div>
+              <div className="mt-4 sm:mt-6 text-center py-6 sm:py-8 text-gray-500 bg-gray-50 rounded-lg">
+                <Image className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 text-gray-300" />
+                <p className="text-xs sm:text-sm">
+                  Avatar upload temporarily disabled
+                </p>
               </div>
 
-              <div className="mt-6">
-                <Button type="submit" loading={updateProfileMutation.isPending}>
+              <div className="mt-4 sm:mt-6">
+                <Button
+                  type="submit"
+                  loading={updateProfileMutation.isPending}
+                  className="w-full sm:w-auto"
+                >
                   Save Changes
                 </Button>
               </div>
@@ -345,30 +361,32 @@ export default function ProfilePage() {
           )}
 
           {activeTab === "location" && (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Location Management */}
-              <Card>
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold">Location Settings</h2>
+              <Card className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+                  <h2 className="text-lg sm:text-xl font-semibold">
+                    Location Settings
+                  </h2>
                   <Button
                     type="button"
                     onClick={() => setShowLocationPicker(true)}
-                    className="flex items-center"
+                    className="flex items-center w-full sm:w-auto text-sm"
                   >
                     <Settings className="w-4 h-4 mr-2" /> Update Location
                   </Button>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {user?.location ? (
-                    <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                      <div className="flex items-start">
-                        <MapPin className="w-5 h-5 text-green-600 mr-3 mt-0.5" />
-                        <div className="flex-1">
-                          <h3 className="font-medium text-green-900">
+                    <div className="bg-green-50 p-3 sm:p-4 rounded-lg border border-green-200">
+                      <div className="flex items-start gap-2 sm:gap-3">
+                        <MapPin className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-medium text-green-900 text-sm sm:text-base">
                             Current Location
                           </h3>
-                          <p className="text-sm text-green-700 mt-1">
+                          <p className="text-xs sm:text-sm text-green-700 mt-1 break-words">
                             {user?.location.address ||
                               `${user?.location.coordinates[1].toFixed(
                                 6
@@ -378,14 +396,14 @@ export default function ProfilePage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                      <div className="flex items-start">
-                        <Navigation className="w-5 h-5 text-yellow-600 mr-3 mt-0.5" />
-                        <div className="flex-1">
-                          <h3 className="font-medium text-yellow-900">
+                    <div className="bg-yellow-50 p-3 sm:p-4 rounded-lg border border-yellow-200">
+                      <div className="flex items-start gap-2 sm:gap-3">
+                        <Navigation className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-medium text-yellow-900 text-sm sm:text-base">
                             No Location Set
                           </h3>
-                          <p className="text-sm text-yellow-700 mt-1">
+                          <p className="text-xs sm:text-sm text-yellow-700 mt-1">
                             {user?.role === "barber"
                               ? "Set your location to receive nearby customer requests"
                               : "Set your location to find nearby barbers and get accurate transportation fees"}
@@ -395,13 +413,16 @@ export default function ProfilePage() {
                     </div>
                   )}
 
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-medium">Location Map</h3>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+                    <h3 className="font-medium text-sm sm:text-base">
+                      Location Map
+                    </h3>
                     <Button
                       type="button"
                       variant="secondary"
                       size="sm"
                       onClick={() => setShowMap(!showMap)}
+                      className="w-full sm:w-auto text-sm"
                     >
                       {showMap ? "Hide Map" : "Show Map"}
                     </Button>
@@ -434,14 +455,14 @@ export default function ProfilePage() {
           )}
 
           {activeTab === "business" && user?.role === "barber" && (
-            <div className="space-y-8">
+            <div className="space-y-4 sm:space-y-8">
               {/* Business Info */}
-              <Card>
-                <h2 className="text-xl font-semibold mb-6">
+              <Card className="p-4 sm:p-6">
+                <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6">
                   Business Information
                 </h2>
 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <Input
                     label="Business Name (Optional)"
                     name="businessName"
@@ -502,9 +523,11 @@ export default function ProfilePage() {
                   </div>
 
                   {/* Deposit Settings */}
-                  <div className="border rounded-lg p-4">
-                    <h3 className="font-medium mb-3">Deposit Settings</h3>
-                    <div className="grid md:grid-cols-3 gap-4">
+                  <div className="border rounded-lg p-3 sm:p-4">
+                    <h3 className="font-medium text-sm sm:text-base mb-3">
+                      Deposit Settings
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           Require Deposit
@@ -579,19 +602,19 @@ export default function ProfilePage() {
               </Card>
 
               {/* File uploads for barbers */}
-              <Card>
-                <h2 className="text-xl font-semibold mb-6 flex items-center">
+              <Card className="p-4 sm:p-6">
+                <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 flex items-center">
                   <Image className="w-5 h-5 mr-2" /> Portfolio & Documents
                 </h2>
                 {/* Portfolio Upload */}
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-xs sm:text-sm text-gray-600">
                         Upload up to a few images showcasing your work
                       </p>
                     </div>
-                    <label className="inline-flex items-center px-3 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-md cursor-pointer">
+                    <label className="inline-flex items-center px-3 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-md cursor-pointer text-sm w-full sm:w-auto justify-center whitespace-nowrap">
                       <Plus className="w-4 h-4 mr-2" /> Upload Images
                       <input
                         type="file"
@@ -611,11 +634,11 @@ export default function ProfilePage() {
 
                   {/* Portfolio Grid */}
                   {!myPortfolio || myPortfolio.length === 0 ? (
-                    <div className="text-sm text-gray-500 py-6 text-center">
+                    <div className="text-xs sm:text-sm text-gray-500 py-6 text-center">
                       No portfolio images yet
                     </div>
                   ) : (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
                       {myPortfolio.map((file: any) => (
                         <div
                           key={file._id}
@@ -647,18 +670,18 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Documents Upload */}
-                <div className="mt-8 pt-6 border-t border-gray-200">
-                  <div className="flex items-center justify-between mb-4">
+                <div className="mt-6 sm:mt-8 pt-6 border-t border-gray-200">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 gap-3">
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900">
+                      <h3 className="text-base sm:text-lg font-medium text-gray-900">
                         Verification Documents
                       </h3>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-xs sm:text-sm text-gray-600">
                         Upload your license, certification, or ID for
                         verification
                       </p>
                     </div>
-                    <label className="inline-flex items-center px-3 py-2 bg-green-600 hover:bg-green-500 text-white rounded-md cursor-pointer">
+                    <label className="inline-flex items-center px-3 py-2 bg-green-600 hover:bg-green-500 text-white rounded-md cursor-pointer text-sm w-full sm:w-auto justify-center whitespace-nowrap">
                       <Plus className="w-4 h-4 mr-2" /> Upload Documents
                       <input
                         type="file"
@@ -739,15 +762,22 @@ export default function ProfilePage() {
               </Card>
 
               {/* Specialties */}
-              <Card>
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold">Specialties</h2>
-                  <Button type="button" size="sm" onClick={handleSpecialtyAdd}>
+              <Card className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+                  <h2 className="text-lg sm:text-xl font-semibold">
+                    Specialties
+                  </h2>
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={handleSpecialtyAdd}
+                    className="w-full sm:w-auto text-sm"
+                  >
                     <Plus className="w-4 h-4 mr-1" /> Add Specialty
                   </Button>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {formData.specialties.map((specialty, index) => (
                     <div key={index} className="flex items-center space-x-2">
                       <Input
@@ -771,19 +801,28 @@ export default function ProfilePage() {
               </Card>
 
               {/* Services */}
-              <Card>
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold">Services & Pricing</h2>
-                  <Button type="button" size="sm" onClick={handleServiceAdd}>
+              <Card className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+                  <h2 className="text-lg sm:text-xl font-semibold">
+                    Services & Pricing
+                  </h2>
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={handleServiceAdd}
+                    className="w-full sm:w-auto text-sm"
+                  >
                     <Plus className="w-4 h-4 mr-1" /> Add Service
                   </Button>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {formData.services.map((service, index) => (
-                    <div key={index} className="border rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-medium">Service {index + 1}</h3>
+                    <div key={index} className="border rounded-lg p-3 sm:p-4">
+                      <div className="flex items-center justify-between mb-3 sm:mb-4">
+                        <h3 className="font-medium text-sm sm:text-base">
+                          Service {index + 1}
+                        </h3>
                         <Button
                           type="button"
                           variant="danger"
@@ -794,7 +833,7 @@ export default function ProfilePage() {
                         </Button>
                       </div>
 
-                      <div className="grid md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <Input
                           label="Service Name"
                           value={service.name}
@@ -858,8 +897,12 @@ export default function ProfilePage() {
                 </div>
               </Card>
 
-              <div className="flex justify-end">
-                <Button type="submit" loading={updateProfileMutation.isPending}>
+              <div className="flex justify-center sm:justify-end">
+                <Button
+                  type="submit"
+                  loading={updateProfileMutation.isPending}
+                  className="w-full sm:w-auto"
+                >
                   Save All Changes
                 </Button>
               </div>
@@ -868,18 +911,20 @@ export default function ProfilePage() {
         </form>
 
         {/* Debug Section */}
-        <div className="mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">
+        <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-gray-50 border border-gray-200 rounded-lg">
+          <h4 className="text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3">
             Debug Information
           </h4>
-          <div className="text-xs text-gray-600 space-y-2">
-            <div>
+          <div className="text-xs text-gray-600 space-y-1 sm:space-y-2">
+            <div className="truncate">
               API Base URL:{" "}
               {process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}
             </div>
             <div>Environment: {process.env.NODE_ENV}</div>
-            <div>Timestamp: {new Date().toISOString()}</div>
-            <div className="flex space-x-2 mt-2">
+            <div className="truncate">
+              Timestamp: {new Date().toISOString()}
+            </div>
+            <div className="flex flex-wrap gap-2 mt-2">
               <button
                 onClick={async () => {
                   try {
