@@ -35,7 +35,7 @@ import { InteractiveMap } from "@/components/map/InteractiveMap";
 import { useLocation } from "@/lib/hooks/useLocation";
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const { coordinates } = useLocation();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("personal");
