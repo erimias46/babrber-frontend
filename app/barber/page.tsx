@@ -225,10 +225,23 @@ export default function BarberDashboard() {
   const updateLocationMutation = useMutation({
     mutationFn: (data: { coordinates: [number, number]; address?: string }) =>
       api.updateLocation(data),
-    onSuccess: () => {
+    onSuccess: (response) => {
+      // Update user context with the latest location data from API response
+      const updatedUser = response.data.data;
+      updateUser(updatedUser);
+
       toast.success("Location updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["barber-requests"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
       setShowLocationPicker(false);
+
+      // Emit updated location to socket for real-time updates
+      if (socket && updatedUser.location?.coordinates) {
+        socket.emit("barber:location-update", {
+          coordinates: updatedUser.location.coordinates,
+          address: updatedUser.location.address,
+        });
+      }
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to update location");
@@ -429,21 +442,21 @@ export default function BarberDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-between mb-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 overflow-x-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               Barber Dashboard
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">
               Manage your requests and availability
             </p>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             <div
               className={`flex items-center px-3 py-2 rounded-lg ${
                 isOnline
@@ -469,30 +482,32 @@ export default function BarberDashboard() {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
+            <nav className="-mb-px flex space-x-4 sm:space-x-8 overflow-x-auto scrollbar-hide">
               <button
                 onClick={() => setActiveTab("dashboard")}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                   activeTab === "dashboard"
                     ? "border-primary-500 text-primary-600"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
-                <BarChart3 className="w-4 h-4 inline mr-2" />
-                Overview
+                <BarChart3 className="w-4 h-4 inline mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Overview</span>
+                <span className="sm:hidden">Overview</span>
               </button>
               <button
                 onClick={() => setActiveTab("requests")}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                   activeTab === "requests"
                     ? "border-primary-500 text-primary-600"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
-                <Clock className="w-4 h-4 inline mr-2" />
-                Requests
+                <Clock className="w-4 h-4 inline mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Requests</span>
+                <span className="sm:hidden">Requests</span>
                 {requests?.filter((r: any) => r.status === "pending").length >
                   0 && (
                   <span className="ml-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
@@ -502,54 +517,58 @@ export default function BarberDashboard() {
               </button>
               <button
                 onClick={() => setActiveTab("location")}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                   activeTab === "location"
                     ? "border-primary-500 text-primary-600"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
-                <MapPin className="w-4 h-4 inline mr-2" />
-                Location & Map
+                <MapPin className="w-4 h-4 inline mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Location & Map</span>
+                <span className="sm:hidden">Location</span>
               </button>
               <button
                 onClick={() => setActiveTab("pricing")}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                   activeTab === "pricing"
                     ? "border-primary-500 text-primary-600"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
-                <DollarSign className="w-4 h-4 inline mr-2" />
-                Services & Pricing
+                <DollarSign className="w-4 h-4 inline mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Services & Pricing</span>
+                <span className="sm:hidden">Pricing</span>
               </button>
               <button
                 onClick={() => setActiveTab("availability")}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                   activeTab === "availability"
                     ? "border-primary-500 text-primary-600"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
-                <Calendar className="w-4 h-4 inline mr-2" />
-                Availability
+                <Calendar className="w-4 h-4 inline mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Availability</span>
+                <span className="sm:hidden">Schedule</span>
               </button>
               <button
                 onClick={() => setActiveTab("payments")}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                   activeTab === "payments"
                     ? "border-primary-500 text-primary-600"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
-                <CreditCard className="w-4 h-4 inline mr-2" />
-                Payments & Deposits
+                <CreditCard className="w-4 h-4 inline mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Payments & Deposits</span>
+                <span className="sm:hidden">Payments</span>
               </button>
             </nav>
           </div>
         </div>
 
         {/* Enhanced Stats Cards */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
             <div className="flex items-center">
               <div className="bg-green-500 p-3 rounded-lg shadow-lg">
@@ -631,11 +650,13 @@ export default function BarberDashboard() {
 
         {/* Tab Content */}
         {activeTab === "dashboard" && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6 overflow-x-auto">
             {/* Quick Actions */}
             <Card>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold">Quick Actions</h2>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
+                <h2 className="text-lg sm:text-xl font-semibold">
+                  Quick Actions
+                </h2>
                 <div className="flex items-center space-x-2">
                   <div
                     className={`w-2 h-2 rounded-full ${
@@ -652,7 +673,7 @@ export default function BarberDashboard() {
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 <Button
                   onClick={toggleOnlineStatus}
                   loading={updateOnlineStatusMutation.isPending}
@@ -758,7 +779,7 @@ export default function BarberDashboard() {
             </Card>
 
             {/* Recent Activity & Earnings Overview */}
-            <div className="grid lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               {/* Recent Activity */}
               <Card>
                 <h3 className="text-lg font-semibold mb-6 flex items-center">
@@ -1056,9 +1077,9 @@ export default function BarberDashboard() {
         )}
 
         {activeTab === "requests" && (
-          <Card>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold flex items-center">
+          <Card className="overflow-x-auto">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
+              <h2 className="text-lg sm:text-xl font-semibold flex items-center">
                 <User className="w-5 h-5 mr-2 text-blue-600" />
                 All Requests
               </h2>
@@ -1102,12 +1123,6 @@ export default function BarberDashboard() {
                   When customers book your services, their requests will appear
                   here with payment status and details.
                 </p>
-                <Button
-                  onClick={() => (window.location.href = "/dashboard")}
-                  className="shadow-lg"
-                >
-                  <MapPin className="w-4 h-4 mr-2" /> Promote Your Services
-                </Button>
               </div>
             ) : (
               <div className="space-y-6">
@@ -1488,11 +1503,13 @@ export default function BarberDashboard() {
         )}
 
         {activeTab === "location" && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6 overflow-x-auto">
             {/* Location Management */}
             <Card>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold">Location Management</h2>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
+                <h2 className="text-lg sm:text-xl font-semibold">
+                  Location Management
+                </h2>
                 <Button
                   onClick={() => setShowLocationPicker(true)}
                   className="flex items-center"
@@ -1536,7 +1553,7 @@ export default function BarberDashboard() {
                   </div>
                 )}
 
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <h3 className="font-medium">Service Area Map</h3>
                   <Button
                     variant="secondary"
@@ -1548,33 +1565,35 @@ export default function BarberDashboard() {
                 </div>
 
                 {showMap && user.location && (
-                  <SnapchatStyleMap
-                    userLocation={[
-                      user.location.coordinates[1],
-                      user.location.coordinates[0],
-                    ]}
-                    barbers={[
-                      {
-                        ...user,
-                        role: "barber" as const,
-                        specialties: user.specialties || [],
-                        services: user.services || [],
-                        workingHours: user.workingHours || {},
-                        isApproved: user.isApproved || false,
-                        isOnline: isOnline,
-                        documents: user.documents || [],
-                        rating: user.rating || 4.8,
-                        totalRatings: user.totalRatings || 0,
-                        email: user.email,
-                        password: user.password,
-                        phone: user.phone,
-                        isActive: user.isActive,
-                        createdAt: user.createdAt,
-                        updatedAt: user.updatedAt,
-                      },
-                    ]}
-                    currentUser={user}
-                  />
+                  <div className="w-full h-64 sm:h-80 lg:h-96 rounded-lg overflow-hidden border border-gray-200">
+                    <SnapchatStyleMap
+                      userLocation={[
+                        user.location.coordinates[1],
+                        user.location.coordinates[0],
+                      ]}
+                      barbers={[
+                        {
+                          ...user,
+                          role: "barber" as const,
+                          specialties: user.specialties || [],
+                          services: user.services || [],
+                          workingHours: user.workingHours || {},
+                          isApproved: user.isApproved || false,
+                          isOnline: isOnline,
+                          documents: user.documents || [],
+                          rating: user.rating || 4.8,
+                          totalRatings: user.totalRatings || 0,
+                          email: user.email,
+                          password: user.password,
+                          phone: user.phone,
+                          isActive: user.isActive,
+                          createdAt: user.createdAt,
+                          updatedAt: user.updatedAt,
+                        },
+                      ]}
+                      currentUser={user}
+                    />
+                  </div>
                 )}
               </div>
             </Card>
@@ -1582,11 +1601,13 @@ export default function BarberDashboard() {
         )}
 
         {activeTab === "pricing" && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6 overflow-x-auto">
             {/* Service Pricing */}
             <Card>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold">Services & Pricing</h2>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
+                <h2 className="text-lg sm:text-xl font-semibold">
+                  Services & Pricing
+                </h2>
                 <Button
                   className="flex items-center"
                   onClick={() => setShowAddService(true)}
@@ -1735,11 +1756,13 @@ export default function BarberDashboard() {
         )}
 
         {activeTab === "availability" && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6 overflow-x-auto">
             <Card>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold">Availability</h2>
-                <div className="space-x-2">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
+                <h2 className="text-lg sm:text-xl font-semibold">
+                  Availability
+                </h2>
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                   <Button
                     variant="secondary"
                     onClick={async () => {
@@ -2323,12 +2346,12 @@ export default function BarberDashboard() {
 
       {/* Payments & Deposits Tab */}
       {activeTab === "payments" && (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6 overflow-x-auto">
           {/* Stripe Account Status */}
           <StripeAccountStatus />
 
           {/* Payment Status Overview */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <Card>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">Deposit Settings</h3>
@@ -2409,7 +2432,7 @@ export default function BarberDashboard() {
                     onClick={async () => {
                       try {
                         const response = await apiClient.post(
-                          "/stripe/connect/onboard"
+                          "/connect/onboard"
                         );
                         const data = response.data;
                         if (data.success && data.url) {
