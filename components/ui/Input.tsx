@@ -23,7 +23,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           className={clsx(
-            "input",
+            "input text-base sm:text-sm min-h-[44px]", // Larger text and min height for mobile touch targets
             {
               "border-red-300 focus:ring-red-500 focus:border-red-300": error,
               "w-full": fullWidth,

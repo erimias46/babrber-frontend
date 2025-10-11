@@ -29,11 +29,11 @@ export function Button({
           "btn-danger": variant === "danger",
           "btn-success": variant === "success",
           "btn-warning": variant === "warning",
-          // Responsive sizing
-          "px-2 py-1.5 text-xs": size === "sm",
-          "px-3 py-2 text-sm": size === "md",
-          "px-4 py-2.5 text-base": size === "lg",
-          "px-6 py-3 text-lg": size === "xl",
+          // Responsive sizing with mobile-friendly touch targets (min 44px height)
+          "px-2 py-2 text-xs min-h-[40px]": size === "sm",
+          "px-3 py-2.5 text-sm min-h-[44px]": size === "md",
+          "px-4 py-3 text-base min-h-[48px]": size === "lg",
+          "px-6 py-3.5 text-lg min-h-[52px]": size === "xl",
           // Full width option
           "w-full": fullWidth,
           // Loading and disabled states

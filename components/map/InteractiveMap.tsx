@@ -183,11 +183,11 @@ export function InteractiveMap({
       {mapInitialized && (
         <Button
           size="sm"
-          className="absolute top-4 right-4 shadow-lg"
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 shadow-lg text-xs sm:text-sm"
           onClick={getCurrentLocation}
         >
-          <Navigation className="w-4 h-4 mr-2" />
-          My Location
+          <Navigation className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
+          <span className="hidden sm:inline">My Location</span>
         </Button>
       )}
     </div>

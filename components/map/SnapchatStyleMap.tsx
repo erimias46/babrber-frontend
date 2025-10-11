@@ -246,7 +246,7 @@ export function SnapchatStyleMap({
       // Create new map instance
       const map = new (window as any).google.maps.Map(mapRef.current, {
         center: mapCenter,
-        zoom: 16, // Increased zoom level for better detail
+        zoom: 18, // Very zoomed in for precise user location
         styles: mapThemes.dark.styles,
         mapTypeControl: false,
         streetViewControl: false,
@@ -285,7 +285,7 @@ export function SnapchatStyleMap({
       if (userLocation && userLocation.length === 2) {
         const userLatLng = { lat: userLocation[1], lng: userLocation[0] };
         map.setCenter(userLatLng);
-        map.setZoom(16);
+        map.setZoom(18); // Very zoomed in for precise location awareness
         
         // Add a slight delay to ensure smooth transition
         setTimeout(() => {
@@ -328,7 +328,7 @@ export function SnapchatStyleMap({
     if (mapInstanceRef.current && userLocation && userLocation.length === 2) {
       const userLatLng = { lat: userLocation[1], lng: userLocation[0] };
       mapInstanceRef.current.setCenter(userLatLng);
-      mapInstanceRef.current.setZoom(16);
+      mapInstanceRef.current.setZoom(18); // Very zoomed in for street-level detail
       mapInstanceRef.current.panTo(userLatLng);
     }
   }, [userLocation]);
