@@ -22,9 +22,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  // Redirect to dashboard if accessing auth routes with token
+  // Redirect to home page if accessing auth routes with token
+  // Let client-side routing handle role-based redirects
   if (isAuthRoute && token) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
