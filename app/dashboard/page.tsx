@@ -280,12 +280,12 @@ export default function DashboardPage() {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-gray-900 flex flex-col">
-      <div className="absolute top-0 left-0 right-0 z-10">
+      <div className="absolute top-0 left-0 right-0 z-50">
         <Navbar />
       </div>
       
-      {/* Map Container */}
-      <div className="pt-16 sm:pt-20 flex-1 w-full">
+      {/* Map Container - Mobile Optimized */}
+      <div className="pt-16 sm:pt-20 flex-1 w-full relative">
         <SnapchatStyleMap
           userLocation={coordinates}
           barbers={barbers || []}
@@ -293,8 +293,8 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* Barber List at Bottom */}
-      <div className="absolute bottom-0 left-0 right-0 z-20">
+      {/* Barber List at Bottom - Mobile Optimized */}
+      <div className="absolute bottom-0 left-0 right-0 z-10 safe-area-pb">
         <BarberList 
           barbers={barbers || []} 
           onBarberSelect={(barber) => {
@@ -304,18 +304,18 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* Info overlay showing number of barbers found */}
-      <div className="absolute top-20 sm:top-24 left-2 sm:left-4 z-30 max-w-[calc(100vw-1rem)] sm:max-w-none">
-        <div className="bg-gray-800/95 backdrop-blur-sm text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow-lg border border-gray-700">
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400 flex-shrink-0" />
-            <span className="text-xs sm:text-sm font-medium truncate">
+      {/* Info overlay showing number of barbers found - Mobile Optimized */}
+      <div className="absolute top-20 sm:top-24 left-2 sm:left-4 z-40 max-w-[calc(100vw-1rem)] sm:max-w-none">
+        <div className="bg-gray-800/95 backdrop-blur-sm text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl shadow-xl border border-gray-700 touch-manipulation">
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" />
+            <span className="text-sm sm:text-base font-semibold truncate">
               {hasBarbers
                 ? `${barbers.length} barber${barbers.length !== 1 ? "s" : ""}`
                 : "No barbers"}
             </span>
           </div>
-          <div className="text-[10px] sm:text-xs text-gray-400 mt-0.5 sm:mt-1 truncate">
+          <div className="text-xs sm:text-sm text-gray-300 mt-1 sm:mt-1.5 truncate">
             {hasBarbers
               ? `${barbers.filter((b: Barber) => b.isOnline).length} online`
               : "Check back later"}
@@ -325,7 +325,7 @@ export default function DashboardPage() {
 
       {/* Warning if no barbers */}
       {!hasBarbers && (
-        <div className="absolute top-28 sm:top-32 left-2 sm:left-4 z-30 max-w-[calc(100vw-1rem)] sm:max-w-none">
+        <div className="absolute top-28 sm:top-32 left-2 sm:left-4 z-40 max-w-[calc(100vw-1rem)] sm:max-w-none">
           <div className="bg-yellow-600/95 backdrop-blur-sm text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow-lg border border-yellow-500">
             <div className="flex items-center gap-1.5 sm:gap-2">
               <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
@@ -342,7 +342,7 @@ export default function DashboardPage() {
 
       {/* Error warning if API failed */}
       {hasBarberError && (
-        <div className="absolute top-36 sm:top-40 left-2 sm:left-4 z-30 max-w-[calc(100vw-1rem)] sm:max-w-none">
+        <div className="absolute top-36 sm:top-40 left-2 sm:left-4 z-40 max-w-[calc(100vw-1rem)] sm:max-w-none">
           <div className="bg-red-600/95 backdrop-blur-sm text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow-lg border border-red-500">
             <div className="flex items-center gap-1.5 sm:gap-2">
               <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
@@ -365,7 +365,7 @@ export default function DashboardPage() {
 
       {/* Debug info overlay (only in development) */}
       {process.env.NODE_ENV === "development" && (
-        <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 z-30 max-w-[calc(50vw-1rem)] sm:max-w-none">
+        <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 z-40 max-w-[calc(50vw-1rem)] sm:max-w-none">
           <div className="bg-gray-800/95 backdrop-blur-sm text-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg shadow-lg border border-gray-700 text-[10px] sm:text-xs">
             <div className="truncate">
               📍 {coordinates?.join(", ") || "No coords"}
@@ -378,16 +378,16 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Mobile Controls Overlay */}
-      <div className="absolute bottom-4 right-2 sm:right-4 z-30 md:hidden">
-        <div className="flex flex-col gap-2">
+      {/* Mobile Controls Overlay - Optimized for Touch */}
+      <div className="absolute bottom-20 sm:bottom-24 right-3 sm:right-4 z-40 md:hidden safe-area-pb">
+        <div className="flex flex-col gap-3">
           <button
             onClick={handleRetry}
-            className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white p-2.5 sm:p-3 rounded-full shadow-lg transition-colors touch-target"
+            className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white p-4 rounded-full shadow-xl transition-all duration-200 touch-manipulation min-h-[48px] min-w-[48px] flex items-center justify-center"
             title="Refresh barbers"
             aria-label="Refresh barbers"
           >
-            <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
+            <RefreshCw className="w-5 h-5" />
           </button>
         </div>
       </div>

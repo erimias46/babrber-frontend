@@ -55,62 +55,62 @@ export function BarberList({ barbers, onBarberSelect, className = "" }: BarberLi
 
   return (
     <>
-      <div className={`bg-white border-t border-gray-200 shadow-lg ${className}`}>
-        {/* Header */}
+      <div className={`bg-white border-t border-gray-200 shadow-2xl ${className} safe-area-pb`}>
+        {/* Header - Mobile Optimized */}
         <div 
-          className="p-3 sm:p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors"
+          className="p-4 sm:p-5 border-b border-gray-100 cursor-pointer hover:bg-gray-50 active:bg-gray-100 transition-colors touch-manipulation"
           onClick={() => setIsExpanded(!isExpanded)}
         >
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
+            <div className="flex items-center space-x-3 flex-1 min-w-0">
+              <div className="w-3 h-3 bg-green-500 rounded-full flex-shrink-0"></div>
+              <h3 className="font-bold text-gray-900 text-base sm:text-lg truncate">
                 {isExpanded 
                   ? `${barbers.length} Barber${barbers.length !== 1 ? 's' : ''} Available`
                   : `${barbers.length} Barber${barbers.length !== 1 ? 's' : ''} Nearby`
                 }
               </h3>
               {!isExpanded && barbers.length > 2 && (
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                <span className="text-xs text-gray-500 bg-gray-100 px-2.5 py-1.5 rounded-full flex-shrink-0">
                   Tap to see all
                 </span>
               )}
             </div>
-            <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+            <button className="p-2 hover:bg-gray-100 active:bg-gray-200 rounded-full transition-colors touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center">
               {isExpanded ? (
-                <ChevronDown className="w-5 h-5 text-gray-600" />
+                <ChevronDown className="w-6 h-6 text-gray-600" />
               ) : (
-                <ChevronUp className="w-5 h-5 text-gray-600" />
+                <ChevronUp className="w-6 h-6 text-gray-600" />
               )}
             </button>
           </div>
         </div>
 
-        {/* Barber List */}
-        <div className={`transition-all duration-300 ease-in-out ${
-          isExpanded ? 'max-h-96 overflow-y-auto' : 'max-h-32 overflow-hidden'
+        {/* Barber List - Mobile Optimized */}
+        <div className={`transition-all duration-300 ease-in-out scrollbar-mobile ${
+          isExpanded ? 'max-h-96 overflow-y-auto' : 'max-h-36 overflow-hidden'
         }`}>
           <div className="divide-y divide-gray-100">
             {Object.entries(groupedBarbers).slice(0, isExpanded ? undefined : 1).map(([address, locationBarbers]) => (
-              <div key={address} className="p-3 sm:p-4">
-                {/* Location Header */}
-                <div className="flex items-center space-x-2 mb-3">
-                  <MapPin className="w-4 h-4 text-gray-500" />
-                  <span className="text-xs font-medium text-gray-600 truncate">
+              <div key={address} className="p-4 sm:p-5">
+                {/* Location Header - Mobile Optimized */}
+                <div className="flex items-center space-x-2 mb-4">
+                  <MapPin className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                  <span className="text-sm font-semibold text-gray-700 truncate">
                     {address}
                   </span>
-                  <span className="text-xs text-gray-400">
-                    ({locationBarbers.length} barber{locationBarbers.length !== 1 ? 's' : ''})
+                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full flex-shrink-0">
+                    {locationBarbers.length} barber{locationBarbers.length !== 1 ? 's' : ''}
                   </span>
                 </div>
 
-                {/* Barbers in this location */}
-                <div className="space-y-2">
+                {/* Barbers in this location - Mobile Optimized */}
+                <div className="space-y-3">
                   {(isExpanded ? locationBarbers : locationBarbers.slice(0, 2)).map((barber) => (
                     <div
                       key={barber._id}
                       onClick={() => handleBarberClick(barber)}
-                      className="flex items-center space-x-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors group"
+                      className="flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 active:bg-gray-100 cursor-pointer transition-all duration-200 group touch-manipulation min-h-[64px]"
                     >
                       {/* Avatar */}
                       <div className="flex-shrink-0">
@@ -123,59 +123,59 @@ export function BarberList({ barbers, onBarberSelect, className = "" }: BarberLi
                         </div>
                       </div>
 
-                      {/* Barber Info */}
+                      {/* Barber Info - Mobile Optimized */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center space-x-2">
-                          <h4 className="font-medium text-gray-900 text-sm sm:text-base truncate">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <h4 className="font-bold text-gray-900 text-base sm:text-lg truncate">
                             {barber.firstName} {barber.lastName}
                           </h4>
                           {barber.isApproved && (
-                            <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                              Verified
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 flex-shrink-0">
+                              ✓ Verified
                             </span>
                           )}
                         </div>
                         
-                        <div className="flex items-center space-x-3 mt-1">
+                        <div className="flex items-center space-x-4 mb-2">
                           {/* Rating */}
                           <div className="flex items-center space-x-1">
-                            <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                            <span className="text-xs text-gray-600">
+                            <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                            <span className="text-sm font-medium text-gray-700">
                               {getAverageRating(barber)}
                             </span>
                           </div>
 
                           {/* Distance */}
                           <div className="flex items-center space-x-1">
-                            <MapPin className="w-3 h-3 text-gray-400" />
-                            <span className="text-xs text-gray-500">
+                            <MapPin className="w-4 h-4 text-gray-400" />
+                            <span className="text-sm text-gray-600">
                               {getDistance(barber)} mi
                             </span>
                           </div>
 
                           {/* Availability */}
                           <div className="flex items-center space-x-1">
-                            <Clock className="w-3 h-3 text-gray-400" />
-                            <span className="text-xs text-green-600 font-medium">
-                              Available now
+                            <Clock className="w-4 h-4 text-green-500" />
+                            <span className="text-sm text-green-600 font-semibold">
+                              Available
                             </span>
                           </div>
                         </div>
 
-                        {/* Services preview */}
+                        {/* Services preview - Mobile Optimized */}
                         {barber.services && barber.services.length > 0 && (
-                          <div className="mt-1">
-                            <div className="flex flex-wrap gap-1">
+                          <div className="mt-2">
+                            <div className="flex flex-wrap gap-2">
                               {barber.services.slice(0, 2).map((service, index) => (
                                 <span
                                   key={index}
-                                  className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-blue-50 text-blue-700"
+                                  className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-blue-50 text-blue-700"
                                 >
                                   {service.name}
                                 </span>
                               ))}
                               {barber.services.length > 2 && (
-                                <span className="text-xs text-gray-500">
+                                <span className="text-sm text-gray-500 font-medium">
                                   +{barber.services.length - 2} more
                                 </span>
                               )}
@@ -184,12 +184,12 @@ export function BarberList({ barbers, onBarberSelect, className = "" }: BarberLi
                         )}
                       </div>
 
-                      {/* Price */}
+                      {/* Price - Mobile Optimized */}
                       <div className="flex-shrink-0 text-right">
-                        <div className="text-sm font-semibold text-green-600">
+                        <div className="text-lg font-bold text-green-600">
                           ${barber.services?.[0]?.price || 'N/A'}
                         </div>
-                        <div className="text-xs text-gray-500">starting</div>
+                        <div className="text-sm text-gray-500 font-medium">starting</div>
                       </div>
                     </div>
                   ))}

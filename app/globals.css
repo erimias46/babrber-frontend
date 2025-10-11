@@ -355,6 +355,47 @@
     @apply flex flex-col space-y-3 sm:space-y-4;
   }
 
+  /* Mobile Touch Optimizations */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-pt {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* Mobile Scrollbar Styling */
+  .scrollbar-mobile {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+  }
+
+  .scrollbar-mobile::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .scrollbar-mobile::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-mobile::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 2px;
+  }
+
+  /* Mobile Text Selection */
+  .select-none-mobile {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
   /* Responsive Sidebar */
   .sidebar-mobile {
     @apply fixed inset-y-0 left-0 z-50 w-64 max-w-[85vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out;
