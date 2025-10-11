@@ -918,7 +918,7 @@ export default function ProfilePage() {
           <div className="text-xs text-gray-600 space-y-1 sm:space-y-2">
             <div className="truncate">
               API Base URL:{" "}
-              {process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}
+              {process.env.NEXT_PUBLIC_API_URL || "https://your-barber-backend-9364a99fcf71.herokuapp.com"}
             </div>
             <div>Environment: {process.env.NODE_ENV}</div>
             <div className="truncate">
@@ -951,7 +951,7 @@ export default function ProfilePage() {
                   try {
                     console.log("🔍 Testing API endpoint reachability...");
                     const testRes = await fetch(
-                      "http://localhost:5000/api/health"
+                      "https://your-barber-backend-9364a99fcf71.herokuapp.com/api/health"
                     );
                     const testData = await testRes.json();
                     console.log("🔍 Health check result:", testData);
@@ -970,7 +970,7 @@ export default function ProfilePage() {
                   try {
                     console.log("🔌 Testing connect/onboard endpoint...");
                     const testRes = await fetch(
-                      "http://localhost:5000/api/connect/onboard",
+                      "https://your-barber-backend-9364a99fcf71.herokuapp.com/api/connect/onboard",
                       {
                         method: "POST",
                         headers: {

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ApiResponse } from "@/types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://your-barber-backend-9364a99fcf71.herokuapp.com/api";
 export const API_ORIGIN = (() => {
   try {
     const url = new URL(API_URL);

@@ -290,11 +290,11 @@
 
   /* Mobile Navigation Improvements */
   .mobile-nav-overlay {
-    @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-40;
+    @apply fixed top-16 sm:top-20 left-0 right-0 bottom-0 bg-black/50 backdrop-blur-sm z-40;
   }
 
   .mobile-nav-panel {
-    @apply fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50;
+    @apply fixed right-0 top-16 sm:top-20 h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)] w-80 max-w-[85vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50;
   }
 
   .mobile-nav-panel.closed {

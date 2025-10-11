@@ -2,9 +2,9 @@
 const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL:
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api",
+      process.env.NEXT_PUBLIC_API_URL || "https://your-barber-backend-9364a99fcf71.herokuapp.com/api",
     NEXT_PUBLIC_SOCKET_URL:
-      process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000",
+      process.env.NEXT_PUBLIC_SOCKET_URL || "https://your-barber-backend-9364a99fcf71.herokuapp.com",
     NEXT_PUBLIC_MAPS_API_KEY: process.env.NEXT_PUBLIC_MAPS_API_KEY || "",
     NEXT_PUBLIC_GOOGLE_MAPS_API_KEY:
       process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
