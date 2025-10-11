@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Barber } from "@/types";
 import { Star, MapPin, Clock, ChevronUp, ChevronDown } from "lucide-react";
-import { BarberDetailModal } from "./BarberDetailModal";
+import BarberDetailModal from "./BarberDetailModal";
 
 interface BarberListProps {
   barbers: Barber[];
