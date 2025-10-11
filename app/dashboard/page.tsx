@@ -5,6 +5,7 @@ import { useLocation } from "@/lib/hooks/useLocation";
 import { api } from "@/lib/api/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { SnapchatStyleMap } from "@/components/map/SnapchatStyleMap";
+import { BarberList } from "@/components/map/BarberList";
 import { Navbar } from "@/components/layout/Navbar";
 import { useSocket } from "@/lib/socket/SocketContext";
 import { useEffect, useState, useMemo } from "react";
@@ -278,11 +279,13 @@ export default function DashboardPage() {
   });
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-gray-900">
+    <div className="relative h-screen w-screen overflow-hidden bg-gray-900 flex flex-col">
       <div className="absolute top-0 left-0 right-0 z-10">
         <Navbar />
       </div>
-      <div className="pt-16 sm:pt-20 h-full w-full">
+      
+      {/* Map Container */}
+      <div className="pt-16 sm:pt-20 flex-1 w-full">
         <SnapchatStyleMap
           userLocation={coordinates}
           barbers={barbers || []}
@@ -290,8 +293,19 @@ export default function DashboardPage() {
         />
       </div>
 
+      {/* Barber List at Bottom */}
+      <div className="absolute bottom-0 left-0 right-0 z-20">
+        <BarberList 
+          barbers={barbers || []} 
+          onBarberSelect={(barber) => {
+            console.log('Selected barber:', barber);
+            // You can add additional logic here if needed
+          }}
+        />
+      </div>
+
       {/* Info overlay showing number of barbers found */}
-      <div className="absolute top-20 sm:top-24 left-2 sm:left-4 z-20 max-w-[calc(100vw-1rem)] sm:max-w-none">
+      <div className="absolute top-20 sm:top-24 left-2 sm:left-4 z-30 max-w-[calc(100vw-1rem)] sm:max-w-none">
         <div className="bg-gray-800/95 backdrop-blur-sm text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow-lg border border-gray-700">
           <div className="flex items-center gap-1.5 sm:gap-2">
             <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400 flex-shrink-0" />
@@ -311,7 +325,7 @@ export default function DashboardPage() {
 
       {/* Warning if no barbers */}
       {!hasBarbers && (
-        <div className="absolute top-28 sm:top-32 left-2 sm:left-4 z-20 max-w-[calc(100vw-1rem)] sm:max-w-none">
+        <div className="absolute top-28 sm:top-32 left-2 sm:left-4 z-30 max-w-[calc(100vw-1rem)] sm:max-w-none">
           <div className="bg-yellow-600/95 backdrop-blur-sm text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow-lg border border-yellow-500">
             <div className="flex items-center gap-1.5 sm:gap-2">
               <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
@@ -328,7 +342,7 @@ export default function DashboardPage() {
 
       {/* Error warning if API failed */}
       {hasBarberError && (
-        <div className="absolute top-36 sm:top-40 left-2 sm:left-4 z-20 max-w-[calc(100vw-1rem)] sm:max-w-none">
+        <div className="absolute top-36 sm:top-40 left-2 sm:left-4 z-30 max-w-[calc(100vw-1rem)] sm:max-w-none">
           <div className="bg-red-600/95 backdrop-blur-sm text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg shadow-lg border border-red-500">
             <div className="flex items-center gap-1.5 sm:gap-2">
               <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
@@ -351,7 +365,7 @@ export default function DashboardPage() {
 
       {/* Debug info overlay (only in development) */}
       {process.env.NODE_ENV === "development" && (
-        <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 z-20 max-w-[calc(50vw-1rem)] sm:max-w-none">
+        <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 z-30 max-w-[calc(50vw-1rem)] sm:max-w-none">
           <div className="bg-gray-800/95 backdrop-blur-sm text-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg shadow-lg border border-gray-700 text-[10px] sm:text-xs">
             <div className="truncate">
               📍 {coordinates?.join(", ") || "No coords"}
@@ -365,7 +379,7 @@ export default function DashboardPage() {
       )}
 
       {/* Mobile Controls Overlay */}
-      <div className="absolute bottom-4 right-2 sm:right-4 z-20 md:hidden">
+      <div className="absolute bottom-4 right-2 sm:right-4 z-30 md:hidden">
         <div className="flex flex-col gap-2">
           <button
             onClick={handleRetry}
