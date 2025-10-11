@@ -17,7 +17,7 @@ export function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith(route)
   );
 
-  // Redirect to login if accessing protected route without token
+  // Redirect to login if accessing  protected route without token
   if (isProtectedRoute && !token) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
