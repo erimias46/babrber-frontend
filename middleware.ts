@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
     request.cookies.get("token")?.value ||
     request.headers.get("authorization")?.replace("Bearer ", "");
 
-  // Protected routes
+  // Protected routess
   const protectedRoutes = ["/dashboard", "/barber", "/admin", "/profile"];
   const authRoutes = ["/auth/login", "/auth/register"];
 
