@@ -567,90 +567,91 @@ export default function BarberDashboard() {
           </div>
         </div>
 
-        {/* Enhanced Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
-          <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
-            <div className="flex items-center">
-              <div className="bg-green-500 p-3 rounded-lg shadow-lg">
-                <Wallet className="w-6 h-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm text-green-700 font-medium">
-                  Total Earnings
-                </p>
-                <p className="text-2xl font-bold text-green-900">
-                  ${stats.totalEarnings.toFixed(2)}
-                </p>
-                <p className="text-xs text-green-600">
-                  +${stats.thisWeekEarnings.toFixed(2)} this week
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-            <div className="flex items-center">
-              <div className="bg-blue-500 p-3 rounded-lg shadow-lg">
-                <Users className="w-6 h-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm text-blue-700 font-medium">
-                  Total Customers
-                </p>
-                <p className="text-2xl font-bold text-blue-900">
-                  {stats.totalCustomers}
-                </p>
-                <p className="text-xs text-blue-600">
-                  {requests?.filter((r: any) => r.status === "pending")
-                    .length || 0}{" "}
-                  pending
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
-            <div className="flex items-center">
-              <div className="bg-purple-500 p-3 rounded-lg shadow-lg">
-                <CheckCircle className="w-6 h-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm text-purple-700 font-medium">
-                  Completion Rate
-                </p>
-                <p className="text-2xl font-bold text-purple-900">
-                  {stats.completionRate}%
-                </p>
-                <p className="text-xs text-purple-600">
-                  {requests?.filter((r: any) => r.status === "completed")
-                    .length || 0}{" "}
-                  completed
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200">
-            <div className="flex items-center">
-              <div className="bg-yellow-500 p-3 rounded-lg shadow-lg">
-                <Star className="w-6 h-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm text-yellow-700 font-medium">Rating</p>
-                <p className="text-2xl font-bold text-yellow-900">
-                  {stats.averageRating.toFixed(1)}
-                </p>
-                <p className="text-xs text-yellow-600">
-                  {stats.responseTime} avg response
-                </p>
-              </div>
-            </div>
-          </Card>
-        </div>
-
         {/* Tab Content */}
         {activeTab === "dashboard" && (
           <div className="space-y-4 sm:space-y-6 overflow-x-auto">
+            {/* Enhanced Stats Cards - Only on Dashboard */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+              <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+                <div className="flex items-center">
+                  <div className="bg-green-500 p-3 rounded-lg shadow-lg">
+                    <Wallet className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-green-700 font-medium">
+                      Total Earnings
+                    </p>
+                    <p className="text-2xl font-bold text-green-900">
+                      ${stats.totalEarnings.toFixed(2)}
+                    </p>
+                    <p className="text-xs text-green-600">
+                      +${stats.thisWeekEarnings.toFixed(2)} this week
+                    </p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+                <div className="flex items-center">
+                  <div className="bg-blue-500 p-3 rounded-lg shadow-lg">
+                    <Users className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-blue-700 font-medium">
+                      Total Customers
+                    </p>
+                    <p className="text-2xl font-bold text-blue-900">
+                      {stats.totalCustomers}
+                    </p>
+                    <p className="text-xs text-blue-600">
+                      {requests?.filter((r: any) => r.status === "pending")
+                        .length || 0}{" "}
+                      pending
+                    </p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+                <div className="flex items-center">
+                  <div className="bg-purple-500 p-3 rounded-lg shadow-lg">
+                    <CheckCircle className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-purple-700 font-medium">
+                      Completion Rate
+                    </p>
+                    <p className="text-2xl font-bold text-purple-900">
+                      {stats.completionRate}%
+                    </p>
+                    <p className="text-xs text-purple-600">
+                      {requests?.filter((r: any) => r.status === "completed")
+                        .length || 0}{" "}
+                      completed
+                    </p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200">
+                <div className="flex items-center">
+                  <div className="bg-yellow-500 p-3 rounded-lg shadow-lg">
+                    <Star className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-yellow-700 font-medium">
+                      Rating
+                    </p>
+                    <p className="text-2xl font-bold text-yellow-900">
+                      {stats.averageRating.toFixed(1)}
+                    </p>
+                    <p className="text-xs text-yellow-600">
+                      {stats.responseTime} avg response
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </div>
             {/* Quick Actions */}
             <Card>
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
@@ -1143,10 +1144,10 @@ export default function BarberDashboard() {
                       className="group relative bg-gradient-to-r from-white to-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300 hover:border-blue-300 hover:-translate-y-1"
                     >
                       {/* Header Section */}
-                      <div className="flex items-start justify-between mb-4">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-3">
                         <div className="flex items-center space-x-3">
                           {/* Status Indicator */}
-                          <div className="relative">
+                          <div className="relative flex-shrink-0">
                             <div
                               className={`w-4 h-4 rounded-full ${
                                 request.status === "completed"
@@ -1164,14 +1165,14 @@ export default function BarberDashboard() {
                           </div>
 
                           {/* Customer Info */}
-                          <div>
-                            <div className="flex items-center space-x-2 mb-1">
-                              <h3 className="text-lg font-semibold text-gray-900">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 mb-1 gap-1">
+                              <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                                 {request.userId.firstName}{" "}
                                 {request.userId.lastName}
                               </h3>
                               <span
-                                className={`px-3 py-1 text-xs font-medium rounded-full ${
+                                className={`px-2 sm:px-3 py-1 text-xs font-medium rounded-full w-fit ${
                                   request.status === "pending"
                                     ? "bg-yellow-100 text-yellow-800"
                                     : request.status === "accepted"
@@ -1184,7 +1185,7 @@ export default function BarberDashboard() {
                                 {request.status}
                               </span>
                             </div>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-xs sm:text-sm text-gray-500">
                               {new Date(request.createdAt).toLocaleDateString()}{" "}
                               •{" "}
                               {new Date(request.createdAt).toLocaleTimeString(
@@ -1199,7 +1200,7 @@ export default function BarberDashboard() {
                         </div>
 
                         {/* Price Section */}
-                        <div className="text-right">
+                        <div className="text-left sm:text-right flex-shrink-0">
                           {(request.amount ||
                             request.barberNetAmount ||
                             request.totalPrice) && (
@@ -1393,11 +1394,11 @@ export default function BarberDashboard() {
 
                       {/* Action Buttons */}
                       <div className="mt-6 pt-4 border-t border-gray-200">
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                           <div className="text-xs text-gray-500 font-mono">
                             ID: {request._id.slice(-8)}
                           </div>
-                          <div className="flex items-center space-x-3">
+                          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
                             {request.status === "pending" && (
                               <>
                                 <Button
@@ -1622,53 +1623,54 @@ export default function BarberDashboard() {
                   {user.services.map((service: any, index: number) => (
                     <div
                       key={index}
-                      className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                      className="border rounded-lg p-4 sm:p-6 hover:shadow-md transition-shadow"
                     >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-lg">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-base sm:text-lg mb-1">
                             {service.name}
                           </h3>
-                          <p className="text-gray-600 mb-2">
+                          <p className="text-sm sm:text-base text-gray-600 mb-3">
                             {service.description}
                           </p>
 
-                          <div className="grid md:grid-cols-3 gap-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4">
                             <div className="flex items-center">
-                              <DollarSign className="w-4 h-4 text-green-600 mr-1" />
-                              <span className="font-medium text-green-600">
+                              <DollarSign className="w-4 h-4 text-green-600 mr-1 flex-shrink-0" />
+                              <span className="font-medium text-green-600 text-sm sm:text-base">
                                 ${service.price}
                               </span>
                             </div>
 
                             <div className="flex items-center">
-                              <Clock className="w-4 h-4 text-blue-600 mr-1" />
-                              <span className="text-blue-600">
+                              <Clock className="w-4 h-4 text-blue-600 mr-1 flex-shrink-0" />
+                              <span className="text-blue-600 text-sm sm:text-base">
                                 {service.duration} min
                               </span>
                             </div>
 
                             <div className="flex items-center">
-                              <Calculator className="w-4 h-4 text-purple-600 mr-1" />
-                              <span className="text-purple-600">
+                              <Calculator className="w-4 h-4 text-purple-600 mr-1 flex-shrink-0" />
+                              <span className="text-purple-600 text-sm sm:text-base">
                                 Transport: $5.00 base
                               </span>
                             </div>
                           </div>
                         </div>
 
-                        <div className="ml-4 flex space-x-2">
+                        <div className="flex sm:flex-col sm:ml-4 space-x-2 sm:space-x-0 sm:space-y-2">
                           <Button
                             size="sm"
                             variant="secondary"
                             onClick={() => handleEditService(index, service)}
+                            className="flex-1 sm:flex-none"
                           >
                             Edit
                           </Button>
                           <Button
                             size="sm"
                             variant="secondary"
-                            className="text-red-600 hover:bg-red-50"
+                            className="text-red-600 hover:bg-red-50 flex-1 sm:flex-none"
                             onClick={() => handleDeleteService(index)}
                           >
                             Delete
@@ -1694,22 +1696,22 @@ export default function BarberDashboard() {
 
             {/* Transportation Fee Settings */}
             <Card>
-              <h2 className="text-xl font-semibold mb-6">
+              <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6">
                 Transportation Fee Settings
               </h2>
 
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4 sm:mb-6">
                 <div className="flex items-start">
-                  <Calculator className="w-5 h-5 text-blue-600 mr-3 mt-0.5" />
-                  <div className="flex-1">
-                    <h3 className="font-medium text-blue-900">
+                  <Calculator className="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-blue-900 text-sm sm:text-base">
                       How Transportation Fees Work
                     </h3>
-                    <p className="text-sm text-blue-700 mt-1">
+                    <p className="text-xs sm:text-sm text-blue-700 mt-1">
                       Transportation fees are automatically calculated based on
                       distance:
                     </p>
-                    <ul className="text-sm text-blue-700 mt-2 space-y-1">
+                    <ul className="text-xs sm:text-sm text-blue-700 mt-2 space-y-1">
                       <li>• Base fee: $5.00 (minimum charge)</li>
                       <li>• Distance fee: $2.00 per kilometer</li>
                       <li>• Total = Base fee + (Distance × $2.00)</li>
@@ -1718,7 +1720,7 @@ export default function BarberDashboard() {
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-4">
                   <h3 className="font-medium">Fee Structure</h3>
                   <div className="space-y-3">
@@ -2353,10 +2355,12 @@ export default function BarberDashboard() {
           {/* Payment Status Overview */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <Card>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">Deposit Settings</h3>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
+                <h3 className="text-base sm:text-lg font-semibold">
+                  Deposit Settings
+                </h3>
                 <div
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  className={`px-2 py-1 rounded-full text-xs font-medium w-fit ${
                     (user as any)?.requireDeposit !== false
                       ? "bg-green-100 text-green-800"
                       : "bg-gray-100 text-gray-800"
@@ -2368,27 +2372,31 @@ export default function BarberDashboard() {
                 </div>
               </div>
               <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Deposit Type:</span>
-                  <span className="text-sm font-medium">
+                <div className="flex justify-between items-center gap-2">
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Deposit Type:
+                  </span>
+                  <span className="text-xs sm:text-sm font-medium text-right">
                     {(user as any)?.depositType === "fixed"
                       ? "Fixed Amount"
                       : "Percentage"}
                   </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Deposit Value:</span>
-                  <span className="text-sm font-medium">
+                <div className="flex justify-between items-center gap-2">
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Deposit Value:
+                  </span>
+                  <span className="text-xs sm:text-sm font-medium text-right">
                     {(user as any)?.depositType === "fixed"
                       ? `$${((user as any)?.depositValue || 0) / 100}`
                       : `${(user as any)?.depositValue || 0}%`}
                   </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">
+                <div className="flex justify-between items-center gap-2">
+                  <span className="text-xs sm:text-sm text-gray-600">
                     Inherit from Admin:
                   </span>
-                  <span className="text-sm font-medium">
+                  <span className="text-xs sm:text-sm font-medium text-right">
                     {(user as any)?.inheritDepositFromAdmin !== false
                       ? "Yes"
                       : "No"}
@@ -2398,10 +2406,12 @@ export default function BarberDashboard() {
             </Card>
 
             <Card>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">Stripe Connection</h3>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
+                <h3 className="text-base sm:text-lg font-semibold">
+                  Stripe Connection
+                </h3>
                 <div
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  className={`px-2 py-1 rounded-full text-xs font-medium w-fit ${
                     user?.stripeAccountId
                       ? "bg-green-100 text-green-800"
                       : "bg-red-100 text-red-800"
@@ -2411,17 +2421,19 @@ export default function BarberDashboard() {
                 </div>
               </div>
               <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Account ID:</span>
-                  <span className="text-xs font-mono text-gray-500 truncate max-w-32">
+                <div className="flex justify-between items-center gap-2">
+                  <span className="text-xs sm:text-sm text-gray-600 flex-shrink-0">
+                    Account ID:
+                  </span>
+                  <span className="text-xs font-mono text-gray-500 truncate text-right">
                     {user?.stripeAccountId || "Not set"}
                   </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">
+                <div className="flex justify-between items-center gap-2">
+                  <span className="text-xs sm:text-sm text-gray-600">
                     Payment Processing:
                   </span>
-                  <span className="text-sm font-medium">
+                  <span className="text-xs sm:text-sm font-medium text-right">
                     {user?.stripeAccountId ? "Active" : "Inactive"}
                   </span>
                 </div>

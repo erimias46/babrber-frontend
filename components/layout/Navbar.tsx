@@ -18,12 +18,25 @@ import { useState } from "react";
 import { NotificationsBell } from "@/components/layout/NotificationsBell";
 import { useChat } from "@/lib/hooks/useChat";
 import { Chat } from "@/types";
+import { useEffect } from "react";
 
 export function Navbar() {
   const { user, logout } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { chats } = useChat();
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [mobileMenuOpen]);
 
   if (!user) return null;
 
@@ -245,11 +258,26 @@ export function Navbar() {
           </div>
 
           {/* Mobile Hamburger */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center space-x-2">
+            {/* Chat Icon for Mobile */}
+            <Link
+              href="/chat"
+              className="relative p-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 transition-all duration-200 touch-target"
+            >
+              <MessageCircle className="w-5 h-5" />
+              {totalUnreadMessages > 0 && (
+                <span className="absolute -top-1 -right-1 text-[10px] px-1.5 py-0.5 rounded-full bg-red-600 text-white">
+                  {totalUnreadMessages > 9 ? "9+" : totalUnreadMessages}
+                </span>
+              )}
+            </Link>
+            {/* Notifications Bell for Mobile */}
+            <NotificationsBell />
+            {/* Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 transition-all duration-200 touch-target"
-              aria-label="Open menu"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
               {mobileMenuOpen ? (
                 <X className="w-6 h-6 text-gray-900" />
@@ -263,8 +291,9 @@ export function Navbar() {
         {/* Mobile Menu Overlay */}
         {mobileMenuOpen && (
           <div
-            className="mobile-nav-overlay"
+            className="mobile-nav-overlay md:hidden"
             onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
           />
         )}
 
@@ -273,6 +302,9 @@ export function Navbar() {
           className={`mobile-nav-panel md:hidden ${
             mobileMenuOpen ? "open" : "closed"
           }`}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile navigation"
         >
           <div className="p-6 h-full overflow-y-auto">
             {/* Mobile Menu Header */}
@@ -343,9 +375,14 @@ export function Navbar() {
                 )}
               </Link>
 
-              <div className="pt-4">
-                <NotificationsBell />
-              </div>
+              <Link
+                href="/notifications"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center w-full p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors"
+              >
+                <Bell className="w-5 h-5 mr-3 text-indigo-600" />
+                <span className="font-medium">Notifications</span>
+              </Link>
             </div>
 
             {/* Mobile Menu Footer */}
