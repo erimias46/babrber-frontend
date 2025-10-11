@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/lib/auth/AuthContext";
 import { useSocket } from "@/lib/socket/SocketContext";
-import { useLocation } from "@/lib/hooks/useLocation";
+import { useBarberLocation } from "@/lib/hooks/useBarberLocation";
 import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -40,7 +40,10 @@ import { StripeAccountStatus } from "@/components/barber/StripeAccountStatus";
 export default function BarberDashboard() {
   const { user, updateUser } = useAuth();
   const { socket } = useSocket();
-  const { coordinates } = useLocation();
+  const { coordinates, isTracking, refreshLocation } = useBarberLocation({
+    updateInterval: 30000, // Update every 30 seconds
+    enableHighAccuracy: true,
+  });
   const queryClient = useQueryClient();
   const [isOnline, setIsOnline] = useState(false);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
@@ -320,6 +323,19 @@ export default function BarberDashboard() {
     }
   }, [user]);
 
+  // Register service worker for background location tracking
+  useEffect(() => {
+    if ('serviceWorker' in navigator && user?.role === "barber") {
+      navigator.serviceWorker.register('/sw.js')
+        .then((registration) => {
+          console.log('Service Worker registered successfully:', registration);
+        })
+        .catch((error) => {
+          console.error('Service Worker registration failed:', error);
+        });
+    }
+  }, [user?.role]);
+
   // Listen for socket connection and maintain online status
   useEffect(() => {
     if (socket && user?.role === "barber" && user.location?.coordinates) {
@@ -471,6 +487,30 @@ export default function BarberDashboard() {
               ></div>
               {isOnline ? "Online" : "Offline"}
             </div>
+            
+            {/* Location Tracking Status */}
+            <div
+              className={`flex items-center px-3 py-2 rounded-lg ${
+                isTracking
+                  ? "bg-blue-100 text-blue-800"
+                  : "bg-gray-100 text-gray-800"
+              }`}
+            >
+              <div
+                className={`w-2 h-2 rounded-full mr-2 ${
+                  isTracking ? "bg-blue-400" : "bg-gray-400"
+                }`}
+              ></div>
+              {isTracking ? "Location Active" : "Location Inactive"}
+            </div>
+            <Button
+              onClick={refreshLocation}
+              variant="secondary"
+              className="flex items-center"
+            >
+              <Navigation className="w-4 h-4 mr-2" />
+              Refresh Location
+            </Button>
             <Button
               onClick={toggleOnlineStatus}
               loading={updateOnlineStatusMutation.isPending}
