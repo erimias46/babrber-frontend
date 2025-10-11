@@ -20,12 +20,6 @@ export default function LoginPage() {
   // Demo user credentials from database
   const mockUsers = [
     {
-      type: "Admin",
-      email: "admin@barberconnect.com",
-      password: "admin123",
-      color: "bg-purple-100 text-purple-800 border-purple-200",
-    },
-    {
       type: "Customer",
       email: "john.doe@example.com",
       password: "password123",
