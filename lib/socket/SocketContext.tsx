@@ -34,6 +34,11 @@ export function SocketProvider({ children }: { children: ReactNode }) {
           auth: {
             token,
           },
+          transports: ['websocket', 'polling'], // Allow fallback to polling
+          reconnection: true,
+          reconnectionDelay: 1000,
+          reconnectionAttempts: 5,
+          timeout: 20000,
         }
       );
 
@@ -51,6 +56,51 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         setIsConnected(false);
         console.log("🔌 Disconnected from server");
       });
+
+      // Handle heartbeat to keep connection alive
+      socketInstance.on('ping', () => {
+        socketInstance.emit('pong');
+      });
+
+      // Handle reconnection
+      socketInstance.on('reconnect', (attemptNumber) => {
+        console.log('🔄 Socket reconnected after', attemptNumber, 'attempts');
+        // Re-emit barber status after reconnection
+        if (user.role === 'barber' && user.isOnline && user.location?.coordinates) {
+          const location = user.location;
+          setTimeout(() => {
+            socketInstance.emit('barber:online-status', { isOnline: true });
+            if (location) {
+              socketInstance.emit('barber:location-update', {
+                coordinates: location.coordinates,
+                address: location.address,
+              });
+            }
+          }, 1000);
+        }
+      });
+
+      // Handle visibility change (mobile browser backgrounding)
+      const handleVisibilityChange = () => {
+        if (document.visibilityState === 'visible' && socketInstance.connected) {
+          console.log('📱 App returned to foreground, re-establishing connection');
+          // Re-emit online status when app comes back to foreground
+          if (user.role === 'barber' && user.isOnline && user.location?.coordinates) {
+            const location = user.location;
+            setTimeout(() => {
+              socketInstance.emit('barber:online-status', { isOnline: true });
+              if (location) {
+                socketInstance.emit('barber:location-update', {
+                  coordinates: location.coordinates,
+                  address: location.address,
+                });
+              }
+            }, 1000);
+          }
+        }
+      };
+
+      document.addEventListener('visibilitychange', handleVisibilityChange);
 
       // Request notifications
       socketInstance.on("request:new", (request: HaircutRequest) => {
@@ -299,6 +349,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       setSocket(socketInstance);
 
       return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
         socketInstance.disconnect();
       };
     }

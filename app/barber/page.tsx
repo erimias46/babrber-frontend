@@ -351,6 +351,45 @@ export default function BarberDashboard() {
     }
   }, [socket, user, isOnline]);
 
+  // Handle socket reconnection - re-establish barber status
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleReconnect = () => {
+      console.log('🔄 Socket reconnected, re-establishing barber status');
+      
+      // Re-emit online status and location after reconnection
+      if (isOnline && user?.location?.coordinates) {
+        socket.emit('barber:online-status', { isOnline: true });
+        socket.emit('barber:location-update', {
+          coordinates: user.location.coordinates,
+          address: user.location.address,
+        });
+      }
+    };
+
+    const handleConnect = () => {
+      console.log('🔌 Socket connected, ensuring barber status is current');
+      
+      // Re-emit online status and location on connection
+      if (isOnline && user?.location?.coordinates) {
+        socket.emit('barber:online-status', { isOnline: true });
+        socket.emit('barber:location-update', {
+          coordinates: user.location.coordinates,
+          address: user.location.address,
+        });
+      }
+    };
+
+    socket.on('connect', handleConnect);
+    socket.on('reconnect', handleReconnect);
+
+    return () => {
+      socket.off('connect', handleConnect);
+      socket.off('reconnect', handleReconnect);
+    };
+  }, [socket, isOnline, user?.location]);
+
   const handleStatusUpdate = (requestId: string, status: string) => {
     updateStatusMutation.mutate({ id: requestId, status });
   };

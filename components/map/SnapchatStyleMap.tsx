@@ -246,7 +246,7 @@ export function SnapchatStyleMap({
       // Create new map instance
       const map = new (window as any).google.maps.Map(mapRef.current, {
         center: mapCenter,
-        zoom: 14,
+        zoom: 16, // Increased zoom level for better detail
         styles: mapThemes.dark.styles,
         mapTypeControl: false,
         streetViewControl: false,
@@ -280,6 +280,18 @@ export function SnapchatStyleMap({
       }));
 
       console.log("[SnapchatStyleMap] Map initialized successfully");
+      
+      // Auto-center and zoom to user location if available
+      if (userLocation && userLocation.length === 2) {
+        const userLatLng = { lat: userLocation[1], lng: userLocation[0] };
+        map.setCenter(userLatLng);
+        map.setZoom(16);
+        
+        // Add a slight delay to ensure smooth transition
+        setTimeout(() => {
+          map.panTo(userLatLng);
+        }, 500);
+      }
     } catch (error) {
       console.error("[SnapchatStyleMap] Failed to initialize map:", error);
       setMapState((prev) => ({
@@ -290,7 +302,7 @@ export function SnapchatStyleMap({
         isInitializing: false,
       }));
     }
-  }, [mapsLoaded, mapCenter, mapState.isInitializing]);
+  }, [mapsLoaded, mapCenter, mapState.isInitializing, userLocation]);
 
   // Handle map errors and retry
   const handleRetry = useCallback(() => {
@@ -310,6 +322,16 @@ export function SnapchatStyleMap({
       initializeMap();
     }, 100);
   }, [initializeMap]);
+
+  // Center map on user location
+  const centerOnUserLocation = useCallback(() => {
+    if (mapInstanceRef.current && userLocation && userLocation.length === 2) {
+      const userLatLng = { lat: userLocation[1], lng: userLocation[0] };
+      mapInstanceRef.current.setCenter(userLatLng);
+      mapInstanceRef.current.setZoom(16);
+      mapInstanceRef.current.panTo(userLatLng);
+    }
+  }, [userLocation]);
 
   // Initialize map when dependencies change
   useEffect(() => {

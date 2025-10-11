@@ -118,4 +118,10 @@ self.addEventListener('message', (event) => {
       })));
     });
   }
+  
+  // Handle keep-alive messages
+  if (event.data && event.data.type === 'KEEP_ALIVE') {
+    // Send periodic messages to keep connection alive
+    event.ports[0].postMessage({ type: 'PONG' });
+  }
 });
