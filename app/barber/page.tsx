@@ -325,13 +325,14 @@ export default function BarberDashboard() {
 
   // Register service worker for background location tracking
   useEffect(() => {
-    if ('serviceWorker' in navigator && user?.role === "barber") {
-      navigator.serviceWorker.register('/sw.js')
+    if ("serviceWorker" in navigator && user?.role === "barber") {
+      navigator.serviceWorker
+        .register("/sw.js")
         .then((registration) => {
-          console.log('Service Worker registered successfully:', registration);
+          console.log("Service Worker registered successfully:", registration);
         })
         .catch((error) => {
-          console.error('Service Worker registration failed:', error);
+          console.error("Service Worker registration failed:", error);
         });
     }
   }, [user?.role]);
@@ -356,12 +357,12 @@ export default function BarberDashboard() {
     if (!socket) return;
 
     const handleReconnect = () => {
-      console.log('🔄 Socket reconnected, re-establishing barber status');
-      
+      console.log("🔄 Socket reconnected, re-establishing barber status");
+
       // Re-emit online status and location after reconnection
       if (isOnline && user?.location?.coordinates) {
-        socket.emit('barber:online-status', { isOnline: true });
-        socket.emit('barber:location-update', {
+        socket.emit("barber:online-status", { isOnline: true });
+        socket.emit("barber:location-update", {
           coordinates: user.location.coordinates,
           address: user.location.address,
         });
@@ -369,24 +370,24 @@ export default function BarberDashboard() {
     };
 
     const handleConnect = () => {
-      console.log('🔌 Socket connected, ensuring barber status is current');
-      
+      console.log("🔌 Socket connected, ensuring barber status is current");
+
       // Re-emit online status and location on connection
       if (isOnline && user?.location?.coordinates) {
-        socket.emit('barber:online-status', { isOnline: true });
-        socket.emit('barber:location-update', {
+        socket.emit("barber:online-status", { isOnline: true });
+        socket.emit("barber:location-update", {
           coordinates: user.location.coordinates,
           address: user.location.address,
         });
       }
     };
 
-    socket.on('connect', handleConnect);
-    socket.on('reconnect', handleReconnect);
+    socket.on("connect", handleConnect);
+    socket.on("reconnect", handleReconnect);
 
     return () => {
-      socket.off('connect', handleConnect);
-      socket.off('reconnect', handleReconnect);
+      socket.off("connect", handleConnect);
+      socket.off("reconnect", handleReconnect);
     };
   }, [socket, isOnline, user?.location]);
 
@@ -526,7 +527,7 @@ export default function BarberDashboard() {
               ></div>
               {isOnline ? "Online" : "Offline"}
             </div>
-            
+
             {/* Location Tracking Status */}
             <div
               className={`flex items-center px-3 py-2 rounded-lg ${
@@ -790,71 +791,6 @@ export default function BarberDashboard() {
                   <MapPin className="w-4 h-4 mr-2" />
                   Update Location
                 </Button>
-              </div>
-
-              {/* Stripe Debug Section */}
-              <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <h4 className="text-sm font-medium text-yellow-800 mb-3 flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-2" />
-                  Stripe Connection Debug
-                </h4>
-                <div className="text-xs text-yellow-700 space-y-2">
-                  <div>
-                    Stripe Account ID:{" "}
-                    {user?.stripeAccountId || "Not connected"}
-                  </div>
-                  <div>User Role: {user?.role}</div>
-                  <div>User ID: {user?._id}</div>
-                  <div className="flex space-x-2">
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={async () => {
-                        try {
-                          console.log(
-                            "🧪 Barber Dashboard: Testing Stripe connection..."
-                          );
-                          const res = await apiClient.get("/stripe/test");
-                          const data = res.data;
-                          console.log("🧪 Stripe test result:", data);
-                          toast.success(
-                            `Stripe test: ${
-                              data.success ? "SUCCESS" : "FAILED"
-                            }`
-                          );
-                        } catch (err) {
-                          console.error("🧪 Stripe test failed:", err);
-                          toast.error("Stripe test failed");
-                        }
-                      }}
-                    >
-                      Test Stripe
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={async () => {
-                        try {
-                          console.log(
-                            "🔌 Barber Dashboard: Testing connectOnboard..."
-                          );
-                          const res = await api.connectOnboard();
-                          console.log("🔌 ConnectOnboard result:", res);
-                          toast.success("ConnectOnboard API call successful");
-                        } catch (err: any) {
-                          console.error("🔌 ConnectOnboard failed:", err);
-                          toast.error(
-                            `ConnectOnboard failed: ${
-                              err.response?.data?.message || err.message
-                            }`
-                          );
-                        }
-                      }}
-                    >
-                      Test Connect
-                    </Button>
-                  </div>
-                </div>
               </div>
             </Card>
 

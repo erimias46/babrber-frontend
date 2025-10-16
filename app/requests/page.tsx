@@ -210,22 +210,22 @@ export default function RequestsPage() {
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="mb-6 sm:mb-8">
           {/* Responsive tabs with horizontal scroll */}
-          <div className="flex gap-2 border-b mb-4 sm:mb-6 overflow-x-auto scrollbar-hide">
+          <div className="flex gap-2 border-b-2 border-gray-200 mb-4 sm:mb-6 overflow-x-auto scrollbar-hide">
             <button
-              className={`px-3 sm:px-4 py-2 font-semibold border-b-2 transition-colors whitespace-nowrap text-sm sm:text-base ${
+              className={`px-4 sm:px-6 py-3 font-semibold border-b-2 transition-all whitespace-nowrap text-sm sm:text-base ${
                 activeTab === "requests"
-                  ? "border-blue-600 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-blue-600"
+                  ? "border-[#FF5A1F] text-[#FF5A1F] bg-[#FF5A1F]/5"
+                  : "border-transparent text-gray-500 hover:text-[#FF5A1F] hover:bg-gray-50"
               }`}
               onClick={() => setActiveTab("requests")}
             >
               My Requests
             </button>
             <button
-              className={`px-3 sm:px-4 py-2 font-semibold border-b-2 transition-colors whitespace-nowrap text-sm sm:text-base ${
+              className={`px-4 sm:px-6 py-3 font-semibold border-b-2 transition-all whitespace-nowrap text-sm sm:text-base ${
                 activeTab === "barbers"
-                  ? "border-blue-600 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-blue-600"
+                  ? "border-[#FF5A1F] text-[#FF5A1F] bg-[#FF5A1F]/5"
+                  : "border-transparent text-gray-500 hover:text-[#FF5A1F] hover:bg-gray-50"
               }`}
               onClick={() => setActiveTab("barbers")}
             >
@@ -237,7 +237,7 @@ export default function RequestsPage() {
           <div className="mb-8 sm:mb-12">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="min-w-0">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text mb-1 sm:mb-2">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#111111] mb-1 sm:mb-2">
                   My Requests
                 </h1>
                 <p className="text-sm sm:text-base md:text-lg text-gray-600">
@@ -245,15 +245,15 @@ export default function RequestsPage() {
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                <div className="badge badge-info text-xs sm:text-sm">
+                <div className="badge bg-[#FF5A1F]/10 text-[#FF5A1F] border border-[#FF5A1F]/20 text-xs sm:text-sm font-semibold">
                   {requestsArray.length} Total
                 </div>
                 {/* Socket connection indicator */}
                 <div
-                  className={`badge text-xs ${
+                  className={`badge text-xs font-semibold ${
                     isConnected
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
+                      ? "bg-green-100 text-green-800 border border-green-200"
+                      : "bg-red-100 text-red-800 border border-red-200"
                   }`}
                 >
                   {isConnected ? "🟢 Live" : "🔴 Offline"}
@@ -262,20 +262,19 @@ export default function RequestsPage() {
                   variant="secondary"
                   size="sm"
                   onClick={handleManualRefresh}
-                  className="shadow-md touch-target"
                   title="Refresh requests"
                 >
                   <RefreshCw className="w-4 h-4" />
                 </Button>
                 <Button
                   onClick={() => (window.location.href = "/dashboard")}
-                  className="shadow-lg hidden sm:flex"
+                  className="hidden sm:flex"
                 >
                   <MapPin className="w-4 h-4 mr-2" /> Find More Barbers
                 </Button>
                 <Button
                   onClick={() => (window.location.href = "/dashboard")}
-                  className="shadow-lg sm:hidden"
+                  className="sm:hidden"
                   size="sm"
                 >
                   <MapPin className="w-4 h-4" />
@@ -293,14 +292,14 @@ export default function RequestsPage() {
                 ))}
               </div>
             ) : requestsArray.length === 0 ? (
-              <div className="card text-center py-12 sm:py-16">
+              <div className="card text-center py-12 sm:py-16 border-2 border-gray-100">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-24 h-24 sm:w-32 sm:h-32 bg-blue-100 rounded-full opacity-20"></div>
+                    <div className="w-24 h-24 sm:w-32 sm:h-32 bg-[#FF5A1F]/10 rounded-full"></div>
                   </div>
-                  <Clock className="w-16 h-16 sm:w-20 sm:h-20 text-blue-400 mx-auto mb-4 sm:mb-6 relative z-10" />
+                  <Clock className="w-16 h-16 sm:w-20 sm:h-20 text-[#FF5A1F] mx-auto mb-4 sm:mb-6 relative z-10" />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">
+                <h3 className="text-xl sm:text-2xl font-bold text-[#111111] mb-2 sm:mb-3">
                   No requests yet
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto px-4">
@@ -310,7 +309,7 @@ export default function RequestsPage() {
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
                   <Button
                     onClick={() => (window.location.href = "/dashboard")}
-                    className="shadow-lg w-full sm:w-auto"
+                    className="w-full sm:w-auto"
                   >
                     <MapPin className="w-4 h-4 mr-2" /> Find Barbers
                   </Button>
@@ -326,17 +325,20 @@ export default function RequestsPage() {
             ) : (
               <div className="space-y-4 sm:space-y-6">
                 {requestsArray.map((request: any) => (
-                  <div key={request._id} className="card card-hover p-4 sm:p-6">
+                  <div
+                    key={request._id}
+                    className="card card-hover p-4 sm:p-6 border-2 border-gray-100"
+                  >
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         {/* Header with Barber Info and Status */}
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3">
                           <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-                            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#FF5A1F] rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
                               <User className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                             </div>
                             <div className="min-w-0 flex-1">
-                              <h3 className="text-base sm:text-xl font-bold text-gray-900 truncate">
+                              <h3 className="text-base sm:text-xl font-bold text-[#111111] truncate">
                                 {request.barberId.firstName}{" "}
                                 {request.barberId.lastName}
                               </h3>
@@ -350,14 +352,14 @@ export default function RequestsPage() {
                           <div className="flex items-center gap-2 flex-wrap">
                             {request.depositRequired &&
                             request.depositPaidAmount ? (
-                              <div className="badge bg-green-100 text-green-800 text-sm font-semibold">
+                              <div className="badge bg-green-100 text-green-800 border border-green-200 text-sm font-semibold">
                                 Deposit Paid
                               </div>
                             ) : null}
                             <div
                               className={`badge ${getStatusColor(
                                 request.status
-                              )} text-sm font-semibold capitalize`}
+                              )} text-sm font-semibold capitalize border`}
                             >
                               {request.status}
                             </div>
@@ -368,12 +370,12 @@ export default function RequestsPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
                           <div className="space-y-2 sm:space-y-3">
                             <div className="flex items-center text-gray-600 gap-2 sm:gap-3">
-                              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+                              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF5A1F] flex-shrink-0" />
                               <div className="min-w-0 flex-1">
-                                <span className="text-xs sm:text-sm font-medium block">
+                                <span className="text-xs sm:text-sm font-semibold block text-gray-700">
                                   Service
                                 </span>
-                                <p className="text-xs sm:text-sm text-gray-900 truncate">
+                                <p className="text-xs sm:text-sm text-gray-900 font-medium truncate">
                                   {(() => {
                                     const services =
                                       request.barberId?.services || [];
@@ -392,12 +394,12 @@ export default function RequestsPage() {
                               </div>
                             </div>
                             <div className="flex items-center text-gray-600 gap-2 sm:gap-3">
-                              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
+                              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF5A1F] flex-shrink-0" />
                               <div className="min-w-0 flex-1">
-                                <span className="text-xs sm:text-sm font-medium block">
+                                <span className="text-xs sm:text-sm font-semibold block text-gray-700">
                                   Requested
                                 </span>
-                                <p className="text-xs sm:text-sm text-gray-900">
+                                <p className="text-xs sm:text-sm text-gray-900 font-medium">
                                   {new Date(
                                     request.createdAt
                                   ).toLocaleDateString()}
@@ -408,12 +410,12 @@ export default function RequestsPage() {
                           <div className="space-y-2 sm:space-y-3">
                             {request.scheduledTime && (
                               <div className="flex items-center text-gray-600 gap-2 sm:gap-3">
-                                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 flex-shrink-0" />
+                                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF5A1F] flex-shrink-0" />
                                 <div className="min-w-0 flex-1">
-                                  <span className="text-xs sm:text-sm font-medium block">
+                                  <span className="text-xs sm:text-sm font-semibold block text-gray-700">
                                     Scheduled
                                   </span>
-                                  <p className="text-xs sm:text-sm text-gray-900">
+                                  <p className="text-xs sm:text-sm text-gray-900 font-medium">
                                     {new Date(
                                       request.scheduledTime
                                     ).toLocaleString()}
@@ -423,12 +425,12 @@ export default function RequestsPage() {
                             )}
                             {request.location?.address && (
                               <div className="flex items-center text-gray-600 gap-2 sm:gap-3">
-                                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0" />
+                                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF5A1F] flex-shrink-0" />
                                 <div className="min-w-0 flex-1">
-                                  <span className="text-xs sm:text-sm font-medium block">
+                                  <span className="text-xs sm:text-sm font-semibold block text-gray-700">
                                     Location
                                   </span>
-                                  <p className="text-xs sm:text-sm text-gray-900 break-words">
+                                  <p className="text-xs sm:text-sm text-gray-900 font-medium break-words">
                                     {request.location.address}
                                   </p>
                                 </div>
@@ -597,10 +599,7 @@ export default function RequestsPage() {
                           )}
 
                         {/* Actions */}
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between pt-3 sm:pt-4 border-t border-gray-100 gap-3">
-                          <div className="text-xs text-gray-500 font-mono">
-                            ID: {request._id.slice(-8)}
-                          </div>
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end pt-3 sm:pt-4 border-t border-gray-200 gap-3">
                           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                             {request.status === "pending" && (
                               <Button
@@ -622,35 +621,40 @@ export default function RequestsPage() {
                               request.status === "rescheduled") && (
                               <>
                                 {rescheduleFor === request._id ? (
-                                  <div className="flex items-center space-x-2">
+                                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                                     <input
                                       type="datetime-local"
                                       value={newTime}
                                       onChange={(e) =>
                                         setNewTime(e.target.value)
                                       }
-                                      className="input"
+                                      className="input text-sm w-full sm:w-auto"
                                     />
-                                    <Button
-                                      size="sm"
-                                      onClick={() =>
-                                        newTime &&
-                                        rescheduleMutation.mutate({
-                                          id: request._id,
-                                          newTime,
-                                        })
-                                      }
-                                      loading={rescheduleMutation.isPending}
-                                    >
-                                      <Calendar className="w-4 h-4 mr-2" /> Save
-                                    </Button>
-                                    <Button
-                                      size="sm"
-                                      variant="secondary"
-                                      onClick={() => setRescheduleFor(null)}
-                                    >
-                                      Cancel
-                                    </Button>
+                                    <div className="flex gap-2">
+                                      <Button
+                                        size="sm"
+                                        onClick={() =>
+                                          newTime &&
+                                          rescheduleMutation.mutate({
+                                            id: request._id,
+                                            newTime,
+                                          })
+                                        }
+                                        loading={rescheduleMutation.isPending}
+                                        className="flex-1 sm:flex-none"
+                                      >
+                                        <Calendar className="w-4 h-4 mr-2" />{" "}
+                                        Save
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="secondary"
+                                        onClick={() => setRescheduleFor(null)}
+                                        className="flex-1 sm:flex-none"
+                                      >
+                                        Cancel
+                                      </Button>
+                                    </div>
                                   </div>
                                 ) : (
                                   <Button
@@ -659,6 +663,7 @@ export default function RequestsPage() {
                                     onClick={() =>
                                       setRescheduleFor(request._id)
                                     }
+                                    className="w-full sm:w-auto"
                                   >
                                     <Calendar className="w-4 h-4 mr-2" />{" "}
                                     Reschedule
@@ -683,7 +688,7 @@ export default function RequestsPage() {
                                         })
                                       }
                                       loading={createPaymentMutation.isPending}
-                                      className="shadow-md bg-green-600 hover:bg-green-700"
+                                      className="bg-green-600 hover:bg-green-700 text-white"
                                     >
                                       <CreditCard className="w-4 h-4 mr-2" />
                                       Pay Deposit $
@@ -707,7 +712,7 @@ export default function RequestsPage() {
                                         })
                                       }
                                       loading={createPaymentMutation.isPending}
-                                      className="shadow-md bg-blue-600 hover:bg-blue-700"
+                                      className="bg-[#FF5A1F] hover:bg-[#E54D1A] text-white"
                                     >
                                       <CreditCard className="w-4 h-4 mr-2" />
                                       Pay Remainder $
@@ -728,7 +733,7 @@ export default function RequestsPage() {
                                         })
                                       }
                                       loading={createPaymentMutation.isPending}
-                                      className="shadow-md bg-green-600 hover:bg-green-700"
+                                      className="bg-green-600 hover:bg-green-700 text-white"
                                     >
                                       <CreditCard className="w-4 h-4 mr-2" />
                                       Pay $
@@ -756,7 +761,7 @@ export default function RequestsPage() {
                               onClick={() =>
                                 (window.location.href = `/barber/${request.barberId._id}`)
                               }
-                              className="shadow-md text-xs sm:text-sm"
+                              className="text-xs sm:text-sm"
                             >
                               View Barber
                             </Button>
@@ -1060,18 +1065,18 @@ export default function RequestsPage() {
 function getStatusColor(status: string) {
   switch (status) {
     case "pending":
-      return "bg-yellow-100 text-yellow-800";
+      return "bg-yellow-100 text-yellow-800 border-yellow-200";
     case "accepted":
-      return "bg-green-100 text-green-800";
+      return "bg-green-100 text-green-800 border-green-200";
     case "declined":
-      return "bg-red-100 text-red-800";
+      return "bg-red-100 text-red-800 border-red-200";
     case "completed":
-      return "bg-blue-100 text-blue-800";
+      return "bg-[#FF5A1F]/10 text-[#FF5A1F] border-[#FF5A1F]/20";
     case "cancelled":
-      return "bg-gray-100 text-gray-800";
+      return "bg-gray-100 text-gray-800 border-gray-200";
     case "rescheduled":
-      return "bg-purple-100 text-purple-800";
+      return "bg-purple-100 text-purple-800 border-purple-200";
     default:
-      return "bg-gray-100 text-gray-800";
+      return "bg-gray-100 text-gray-800 border-gray-200";
   }
 }

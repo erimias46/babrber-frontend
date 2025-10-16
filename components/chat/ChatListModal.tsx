@@ -183,23 +183,23 @@ export function ChatListModal({ onClose, openChatId }: ChatListModalProps) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-0 sm:p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
-        className="bg-white w-full max-w-md sm:max-w-lg max-h-screen h-full sm:h-[600px] rounded-2xl overflow-y-auto border border-gray-200 shadow-2xl flex flex-col"
+        className="bg-white w-full max-w-md sm:max-w-lg h-full sm:h-[600px] sm:rounded-2xl overflow-hidden border-0 sm:border sm:border-gray-200 shadow-2xl flex flex-col"
       >
         {/* Header */}
-        <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900 flex items-center">
-              <MessageCircle className="w-6 h-6 mr-2 text-blue-600" />
-              Messages
+        <div className="p-3 sm:p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50 flex-shrink-0">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center">
+              <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 mr-2 text-blue-600" />
+              <span className="truncate">Messages</span>
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-600 hover:text-gray-900 transition-colors p-2 hover:bg-white/50 rounded-full"
+              className="text-gray-600 hover:text-gray-900 transition-colors p-2 hover:bg-white/50 rounded-full flex-shrink-0"
             >
               <X size={20} />
             </button>
@@ -207,7 +207,7 @@ export function ChatListModal({ onClose, openChatId }: ChatListModalProps) {
           {/* Delete All Chats Button */}
           <div className="flex justify-end mb-2">
             <button
-              className="text-xs px-3 py-1 rounded bg-red-100 text-red-600 hover:bg-red-200 transition-colors disabled:opacity-50"
+              className="text-xs px-2 sm:px-3 py-1 rounded bg-red-100 text-red-600 hover:bg-red-200 transition-colors disabled:opacity-50 whitespace-nowrap"
               onClick={() => {
                 if (
                   window.confirm(
@@ -219,7 +219,7 @@ export function ChatListModal({ onClose, openChatId }: ChatListModalProps) {
               }}
               disabled={isDeletingAllChats}
             >
-              {isDeletingAllChats ? "Deleting..." : "Delete All Chats"}
+              {isDeletingAllChats ? "Deleting..." : "Delete All"}
             </button>
           </div>
           {/* Search */}
@@ -264,65 +264,65 @@ export function ChatListModal({ onClose, openChatId }: ChatListModalProps) {
                   >
                     <button
                       onClick={() => handleChatSelect(chat._id)}
-                      className="flex-1 p-4 text-left"
+                      className="flex-1 p-3 sm:p-4 text-left min-w-0"
                     >
-                      <div className="flex items-center space-x-3">
-                        <div className="relative">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="relative flex-shrink-0">
                           <img
                             src={
                               otherParticipant.profilePicture ||
                               `https://i.pravatar.cc/150?u=${otherParticipant._id}`
                             }
                             alt={fullName}
-                            className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm group-hover:border-blue-200 transition-colors"
+                            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow-sm group-hover:border-blue-200 transition-colors"
                           />
                           {/* Online/Offline Status */}
                           <div
-                            className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white shadow-sm ${
+                            className={`absolute -bottom-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 rounded-full border-2 border-white shadow-sm ${
                               isUserOnline(otherParticipant._id)
                                 ? "bg-green-500"
                                 : "bg-gray-400"
                             }`}
                           ></div>
                           {otherParticipant.role === "barber" && (
-                            <div className="absolute -top-1 -left-1 w-5 h-5 bg-blue-500 rounded-full border-2 border-white shadow-sm">
-                              <span className="text-xs">✂️</span>
+                            <div className="absolute -top-1 -left-1 w-4 h-4 sm:w-5 sm:h-5 bg-blue-500 rounded-full border-2 border-white shadow-sm flex items-center justify-center">
+                              <span className="text-[10px]">✂️</span>
                             </div>
                           )}
                           {unreadCount > 0 && (
-                            <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center shadow-sm">
-                              <span className="text-xs font-medium text-white">
+                            <div className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-red-500 rounded-full flex items-center justify-center shadow-sm">
+                              <span className="text-[10px] sm:text-xs font-medium text-white">
                                 {unreadCount > 9 ? "9+" : unreadCount}
                               </span>
                             </div>
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
-                              <h3 className="font-semibold text-gray-900 truncate group-hover:text-blue-600 transition-colors">
-                                {otherParticipant.firstName}{" "}
-                                {otherParticipant.lastName}
-                              </h3>
-                              <span
-                                className={`text-xs px-2 py-1 rounded-full ${
-                                  isUserOnline(otherParticipant._id)
-                                    ? "bg-green-100 text-green-700"
-                                    : "bg-gray-100 text-gray-600"
-                                }`}
-                              >
-                                {isUserOnline(otherParticipant._id)
-                                  ? "Online"
-                                  : "Offline"}
-                              </span>
-                            </div>
+                          <div className="flex items-center justify-between gap-2 mb-0.5">
+                            <h3 className="font-semibold text-sm sm:text-base text-gray-900 truncate group-hover:text-blue-600 transition-colors">
+                              {otherParticipant.firstName}{" "}
+                              {otherParticipant.lastName}
+                            </h3>
                             {chat.lastMessage && (
-                              <span className="text-xs text-gray-500 font-medium">
+                              <span className="text-[10px] sm:text-xs text-gray-500 font-medium whitespace-nowrap flex-shrink-0">
                                 {formatLastMessageTime(chat.updatedAt)}
                               </span>
                             )}
                           </div>
-                          <p className="text-sm text-gray-600 truncate mt-0.5">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full whitespace-nowrap ${
+                                isUserOnline(otherParticipant._id)
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-gray-100 text-gray-600"
+                              }`}
+                            >
+                              {isUserOnline(otherParticipant._id)
+                                ? "Online"
+                                : "Offline"}
+                            </span>
+                          </div>
+                          <p className="text-xs sm:text-sm text-gray-600 truncate mt-1">
                             {chat.lastMessage?.content ||
                               "Start a conversation"}
                           </p>
@@ -331,7 +331,7 @@ export function ChatListModal({ onClose, openChatId }: ChatListModalProps) {
                     </button>
                     {/* Delete Chat Button */}
                     <button
-                      className="text-xs px-2 py-1 m-2 rounded bg-red-100 text-red-600 hover:bg-red-200 transition-colors disabled:opacity-50"
+                      className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-1 m-2 rounded bg-red-100 text-red-600 hover:bg-red-200 transition-colors disabled:opacity-50 whitespace-nowrap flex-shrink-0"
                       onClick={() => {
                         if (window.confirm("Delete this chat?")) {
                           deleteChat(chat._id);
@@ -339,7 +339,7 @@ export function ChatListModal({ onClose, openChatId }: ChatListModalProps) {
                       }}
                       disabled={isDeletingChat}
                     >
-                      {isDeletingChat ? "Deleting..." : "Delete"}
+                      {isDeletingChat ? "..." : "Delete"}
                     </button>
                   </div>
                 );

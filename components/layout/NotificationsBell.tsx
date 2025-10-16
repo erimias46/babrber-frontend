@@ -47,25 +47,25 @@ export function NotificationsBell() {
   return (
     <div className="relative">
       <button
-        className="relative p-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20"
+        className="relative p-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all duration-200"
         onClick={() => setOpen((o) => !o)}
         aria-label="Notifications"
       >
-        <Bell className="w-5 h-5" />
+        <Bell className="w-5 h-5 text-gray-700" />
         {displayUnreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 text-[10px] px-1.5 py-0.5 rounded-full bg-red-600 text-white">
+          <span className="absolute -top-1 -right-1 text-[10px] px-1.5 py-0.5 rounded-full bg-red-600 text-white font-semibold">
             {displayUnreadCount > 9 ? "9+" : displayUnreadCount}
           </span>
         )}
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-3 w-96 glass rounded-2xl shadow-xl py-2 z-50 border border-white/20">
-          <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
-            <div className="font-medium">Notifications</div>
+        <div className="absolute right-0 mt-3 w-96 max-w-[90vw] bg-white rounded-2xl shadow-xl py-2 z-50 border-2 border-gray-100">
+          <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+            <div className="font-semibold text-gray-900">Notifications</div>
             <button
               onClick={() => markAllAsRead()}
-              className="text-xs text-blue-600 hover:underline"
+              className="text-xs text-[#FF5A1F] hover:text-[#E54D1A] font-medium transition-colors"
             >
               Mark all as read
             </button>
@@ -80,27 +80,29 @@ export function NotificationsBell() {
               notifications.notifications?.map((n: any) => (
                 <div
                   key={n._id}
-                  className="px-4 py-3 hover:bg-white/10 transition flex items-start gap-3"
+                  className="px-4 py-3 hover:bg-gray-50 transition flex items-start gap-3 border-b border-gray-100 last:border-b-0"
                 >
                   <div
-                    className={`w-2 h-2 rounded-full mt-2 ${
-                      n.isRead ? "bg-gray-300" : "bg-blue-500"
+                    className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                      n.isRead ? "bg-gray-300" : "bg-[#FF5A1F]"
                     }`}
                   />
-                  <div className="flex-1">
-                    <div className="text-sm font-medium">{n.title}</div>
-                    <div className="text-xs text-gray-600 leading-relaxed">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-gray-900">
+                      {n.title}
+                    </div>
+                    <div className="text-xs text-gray-600 leading-relaxed mt-1">
                       {n.message}
                     </div>
                     <div className="text-[10px] text-gray-400 mt-1">
                       {new Date(n.createdAt).toLocaleString()}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 flex-shrink-0">
                     {!n.isRead && (
                       <button
                         onClick={() => markAsRead(n._id)}
-                        className="p-1 rounded hover:bg-white/20"
+                        className="p-1.5 rounded-lg hover:bg-gray-200 transition-colors text-gray-600"
                         title="Mark as read"
                       >
                         <Check className="w-4 h-4" />
@@ -108,7 +110,7 @@ export function NotificationsBell() {
                     )}
                     <button
                       onClick={() => deleteNotification(n._id)}
-                      className="p-1 rounded hover:bg-white/20"
+                      className="p-1.5 rounded-lg hover:bg-red-50 transition-colors text-red-600"
                       title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />

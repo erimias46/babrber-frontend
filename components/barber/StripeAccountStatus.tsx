@@ -67,13 +67,13 @@ export function StripeAccountStatus() {
   };
 
   return (
-    <Card className={`p-6 ${getStatusColor()}`}>
-      <div className="flex items-start justify-between mb-4">
+    <Card className={`p-4 sm:p-6 ${getStatusColor()}`}>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4">
         <div className="flex items-center space-x-3">
           {getStatusIcon()}
           <div>
-            <h3 className="font-semibold text-gray-900">
-              Stripe Account Status
+            <h3 className="font-semibold text-base sm:text-lg text-gray-900">
+              Payment Account
             </h3>
             <p className="text-sm text-gray-600">{statusData?.message}</p>
           </div>
@@ -82,131 +82,51 @@ export function StripeAccountStatus() {
           size="sm"
           variant="secondary"
           onClick={() => refetch()}
-          className="flex items-center space-x-1"
+          className="flex items-center space-x-1 w-full sm:w-auto"
         >
           <RefreshCw className="w-4 h-4" />
           <span>Refresh</span>
         </Button>
       </div>
 
-      {statusData?.hasAccount && (
-        <div className="space-y-3 mb-4">
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <span className="text-gray-600">Details Submitted:</span>
-              <span
-                className={`ml-2 font-medium ${
-                  statusData.detailsSubmitted
-                    ? "text-green-600"
-                    : "text-red-600"
-                }`}
-              >
-                {statusData.detailsSubmitted ? "✓" : "✗"}
-              </span>
-            </div>
-            <div>
-              <span className="text-gray-600">Charges Enabled:</span>
-              <span
-                className={`ml-2 font-medium ${
-                  statusData.chargesEnabled ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                {statusData.chargesEnabled ? "✓" : "✗"}
-              </span>
-            </div>
-            <div>
-              <span className="text-gray-600">Payouts Enabled:</span>
-              <span
-                className={`ml-2 font-medium ${
-                  statusData.payoutsEnabled ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                {statusData.payoutsEnabled ? "✓" : "✗"}
-              </span>
-            </div>
-            <div>
-              <span className="text-gray-600">Can Receive Transfers:</span>
-              <span
-                className={`ml-2 font-medium ${
-                  statusData.canReceiveTransfers
-                    ? "text-green-600"
-                    : "text-red-600"
-                }`}
-              >
-                {statusData.canReceiveTransfers ? "✓" : "✗"}
-              </span>
-            </div>
-          </div>
-
-          {statusData.capabilities && (
-            <div className="mt-4 p-3 bg-gray-100 rounded-lg">
-              <h4 className="text-sm font-medium text-gray-700 mb-2">
-                Account Capabilities:
-              </h4>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                {Object.entries(statusData.capabilities).map(
-                  ([capability, status]) => (
-                    <div key={capability} className="flex justify-between">
-                      <span className="text-gray-600">{capability}:</span>
-                      <span
-                        className={`font-medium ${
-                          status === "active"
-                            ? "text-green-600"
-                            : status === "pending"
-                            ? "text-yellow-600"
-                            : "text-red-600"
-                        }`}
-                      >
-                        {status as string}
-                      </span>
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      <div className="flex items-center space-x-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
         {!statusData?.hasAccount || statusData?.needsOnboarding ? (
-          <Button
-            onClick={() => onboardMutation.mutate()}
-            loading={onboardMutation.isPending}
-            className="flex items-center space-x-2"
-          >
-            <ExternalLink className="w-4 h-4" />
-            <span>
-              {statusData?.hasAccount
-                ? "Complete Onboarding"
-                : "Start Onboarding"}
-            </span>
-          </Button>
+          <>
+            <Button
+              onClick={() => onboardMutation.mutate()}
+              loading={onboardMutation.isPending}
+              className="flex items-center justify-center space-x-2 w-full sm:w-auto"
+            >
+              <ExternalLink className="w-4 h-4" />
+              <span>
+                {statusData?.hasAccount
+                  ? "Complete Onboarding"
+                  : "Start Onboarding"}
+              </span>
+            </Button>
+            {!statusData?.canReceiveTransfers && (
+              <div className="flex items-start space-x-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h4 className="font-medium text-sm text-yellow-800">
+                    Action Required
+                  </h4>
+                  <p className="text-sm text-yellow-700 mt-1">
+                    Complete the onboarding process to receive payments.
+                  </p>
+                </div>
+              </div>
+            )}
+          </>
         ) : (
-          <div className="flex items-center space-x-2 text-green-600">
-            <CheckCircle className="w-4 h-4" />
+          <div className="flex items-center space-x-2 text-green-600 p-3 bg-green-50 border border-green-200 rounded-lg w-full">
+            <CheckCircle className="w-5 h-5" />
             <span className="text-sm font-medium">
               Ready to receive payments!
             </span>
           </div>
         )}
       </div>
-
-      {!statusData?.canReceiveTransfers && (
-        <div className="mt-4 p-3 bg-yellow-100 border border-yellow-200 rounded-lg">
-          <div className="flex items-start space-x-2">
-            <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
-            <div>
-              <h4 className="font-medium text-yellow-800">Action Required</h4>
-              <p className="text-sm text-yellow-700 mt-1">
-                Your Stripe account needs to be fully set up to receive
-                payments. Complete the onboarding process to enable payment
-                releases.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
     </Card>
   );
 }

@@ -8,6 +8,15 @@ import Link from "next/link";
 import BarberDetailModal from "./BarberDetailModal";
 import { useRouter } from "next/navigation";
 import { User } from "@/types";
+import { API_ORIGIN } from "@/lib/api/client";
+
+const resolveImageUrl = (url?: string) => {
+  if (!url) return "";
+  const normalized = url.replace("/api/files/uploads", "/uploads");
+  return normalized.startsWith("http")
+    ? normalized
+    : `${API_ORIGIN}${normalized}`;
+};
 
 interface MarkerComponentProps {
   user: User;
@@ -45,9 +54,13 @@ const MarkerComponent = ({
     if (user.avatar || user.profilePicture) {
       return (
         <img
-          src={user.avatar || user.profilePicture}
+          src={resolveImageUrl(user.avatar || user.profilePicture)}
           alt={user.firstName}
           className="w-full h-full object-cover"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.style.display = "none";
+          }}
         />
       );
     }

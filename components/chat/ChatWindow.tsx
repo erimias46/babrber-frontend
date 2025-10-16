@@ -116,52 +116,54 @@ export function ChatWindow({ chatId, onClose, onBack }: ChatWindowProps) {
       : messages[0]?.sender;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-0 sm:p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
-        className="bg-white w-full max-w-lg h-[600px] rounded-2xl overflow-hidden border border-gray-200 shadow-2xl flex flex-col"
+        className="bg-white w-full max-w-lg h-full sm:h-[600px] sm:rounded-2xl overflow-hidden border-0 sm:border sm:border-gray-200 shadow-2xl flex flex-col"
       >
         {/* Header */}
-        <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
-          <div className="flex items-center space-x-3">
+        <div className="p-3 sm:p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50 flex-shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3">
             {onBack && (
               <button
                 onClick={onBack}
-                className="text-gray-600 hover:text-gray-900 transition-colors p-2 hover:bg-white/50 rounded-full"
+                className="text-gray-600 hover:text-gray-900 transition-colors p-2 hover:bg-white/50 rounded-full flex-shrink-0"
               >
-                <ArrowLeft size={20} />
+                <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
               </button>
             )}
 
-            <div className="relative">
+            <div className="relative flex-shrink-0">
               <img
                 src={
                   otherParticipant?.profilePicture ||
                   `https://i.pravatar.cc/150?u=${otherParticipant?._id}`
                 }
                 alt={otherParticipant?.firstName || "User"}
-                className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow-sm"
               />
               {otherParticipant?.role === "barber" && (
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center">
-                  <span className="text-xs">✂️</span>
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center">
+                  <span className="text-[10px] sm:text-xs">✂️</span>
                 </div>
               )}
             </div>
 
-            <div className="flex-1">
-              <h3 className="font-semibold text-gray-900">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-sm sm:text-base text-gray-900 truncate">
                 {otherParticipant?.firstName} {otherParticipant?.lastName}
               </h3>
-              <div className="flex items-center space-x-2">
-                <p className="text-xs text-gray-600 capitalize font-medium">
+              <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                <p className="text-[10px] sm:text-xs text-gray-600 capitalize font-medium">
                   {otherParticipant?.role}
                 </p>
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-xs text-green-600">Online</span>
-                <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
+                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full"></div>
+                <span className="text-[10px] sm:text-xs text-green-600 whitespace-nowrap">
+                  Online
+                </span>
+                <span className="text-[10px] sm:text-xs text-blue-600 bg-blue-100 px-1.5 sm:px-2 py-0.5 rounded-full whitespace-nowrap">
                   Real-time
                 </span>
               </div>
@@ -169,15 +171,15 @@ export function ChatWindow({ chatId, onClose, onBack }: ChatWindowProps) {
 
             <button
               onClick={onClose}
-              className="text-gray-600 hover:text-gray-900 transition-colors p-2 hover:bg-white/50 rounded-full"
+              className="text-gray-600 hover:text-gray-900 transition-colors p-2 hover:bg-white/50 rounded-full flex-shrink-0"
             >
-              <X size={20} />
+              <X size={18} className="sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-gray-50">
           {messagesLoading ? (
             <div className="flex items-center justify-center h-full">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
@@ -222,11 +224,11 @@ export function ChatWindow({ chatId, onClose, onBack }: ChatWindowProps) {
                       animate={{ opacity: 1, y: 0 }}
                       className={`flex ${
                         isOwn ? "justify-end" : "justify-start"
-                      } mb-2`}
+                      } mb-1.5 sm:mb-2`}
                     >
                       <div
-                        className={`flex items-end space-x-2 max-w-xs ${
-                          isOwn ? "flex-row-reverse space-x-reverse" : ""
+                        className={`flex items-end gap-1.5 sm:gap-2 max-w-[75%] sm:max-w-xs ${
+                          isOwn ? "flex-row-reverse" : ""
                         }`}
                       >
                         {!isOwn && showAvatar && (
@@ -236,38 +238,38 @@ export function ChatWindow({ chatId, onClose, onBack }: ChatWindowProps) {
                               `https://i.pravatar.cc/150?u=${message.sender._id}`
                             }
                             alt={message.sender.firstName}
-                            className="w-6 h-6 rounded-full object-cover"
+                            className="w-5 h-5 sm:w-6 sm:h-6 rounded-full object-cover flex-shrink-0"
                           />
                         )}
 
                         <div
-                          className={`px-4 py-2 rounded-2xl shadow-sm relative ${
+                          className={`px-3 sm:px-4 py-2 rounded-2xl shadow-sm relative ${
                             isOwn
                               ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white"
                               : "bg-white text-gray-800 border border-gray-200"
                           } ${isOptimistic ? "opacity-70" : ""}`}
                         >
-                          <p className="text-sm leading-relaxed">
+                          <p className="text-xs sm:text-sm leading-relaxed break-words">
                             {message.content}
                           </p>
-                          <div className="flex items-center justify-between mt-1">
+                          <div className="flex items-center justify-between mt-0.5 sm:mt-1 gap-2">
                             <p
-                              className={`text-xs ${
+                              className={`text-[10px] sm:text-xs whitespace-nowrap ${
                                 isOwn ? "text-blue-100" : "text-gray-500"
                               }`}
                             >
                               {formatTime(message.createdAt)}
                             </p>
                             {isOwn && (
-                              <div className="flex items-center space-x-1 ml-2">
+                              <div className="flex items-center space-x-1 flex-shrink-0">
                                 {isOptimistic ? (
-                                  <div className="w-3 h-3 border-2 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+                                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 border-2 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
                                 ) : message.read ? (
-                                  <span className="text-blue-200 text-xs">
+                                  <span className="text-blue-200 text-[10px] sm:text-xs">
                                     ✓✓
                                   </span>
                                 ) : (
-                                  <span className="text-blue-200 text-xs">
+                                  <span className="text-blue-200 text-[10px] sm:text-xs">
                                     ✓
                                   </span>
                                 )}
@@ -316,10 +318,10 @@ export function ChatWindow({ chatId, onClose, onBack }: ChatWindowProps) {
         </div>
 
         {/* Message Input */}
-        <div className="p-4 border-t border-gray-200 bg-white">
+        <div className="p-3 sm:p-4 border-t border-gray-200 bg-white flex-shrink-0">
           <form
             onSubmit={handleSendMessage}
-            className="flex items-center space-x-3"
+            className="flex items-center gap-2 sm:gap-3"
           >
             <div className="flex-1 relative">
               <input
@@ -330,19 +332,22 @@ export function ChatWindow({ chatId, onClose, onBack }: ChatWindowProps) {
                   handleTyping();
                 }}
                 placeholder="Type a message..."
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-full text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-colors"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-50 border border-gray-200 rounded-full text-sm sm:text-base text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-colors"
                 disabled={isSendingMessage}
               />
             </div>
             <button
               type="submit"
               disabled={!newMessage.trim() || isSendingMessage}
-              className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed rounded-full flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
+              className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed rounded-full flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none flex-shrink-0"
             >
               {isSendingMessage ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <Send size={18} className="text-white ml-0.5" />
+                <Send
+                  size={16}
+                  className="text-white ml-0.5 sm:w-[18px] sm:h-[18px]"
+                />
               )}
             </button>
           </form>

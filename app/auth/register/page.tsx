@@ -66,11 +66,11 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       {/* Background Elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/4 left-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-[#FF5A1F]/10 rounded-full filter blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-[#FF5A1F]/5 rounded-full filter blur-3xl"></div>
       </div>
 
       <div className="w-full max-w-md relative">
@@ -78,7 +78,7 @@ export default function RegisterPage() {
         <div className="text-center mb-6">
           <Link
             href="/"
-            className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors"
+            className="inline-flex items-center text-sm text-gray-600 hover:text-[#FF5A1F] transition-colors font-medium"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
@@ -88,7 +88,7 @@ export default function RegisterPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-6">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#FF5A1F] rounded-2xl flex items-center justify-center shadow-lg">
               {formData.role === "barber" ? (
                 <Scissors className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               ) : (
@@ -96,23 +96,23 @@ export default function RegisterPage() {
               )}
             </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text mb-2">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#111111] mb-2">
             Create Account
           </h1>
           <p className="text-sm sm:text-base lg:text-lg text-gray-600">
             Join as a{" "}
-            <span className="font-semibold text-blue-600">
+            <span className="font-semibold text-[#FF5A1F]">
               {formData.role === "barber" ? "Professional Barber" : "Customer"}
             </span>
           </p>
         </div>
 
         {/* Registration Form */}
-        <Card className="p-6 sm:p-8">
+        <Card className="p-6 sm:p-8 shadow-xl border-2 border-gray-100">
           <form onSubmit={handleSubmit} className="form-stack">
             {/* Role Selection */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-semibold text-[#111111] mb-3">
                 I want to join as:
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -121,28 +121,28 @@ export default function RegisterPage() {
                   onClick={() =>
                     setFormData((prev) => ({ ...prev, role: "user" }))
                   }
-                  className={`p-3 rounded-xl border-2 transition-all duration-200 ${
+                  className={`p-4 rounded-xl border-2 transition-all duration-200 hover:scale-[1.02] ${
                     formData.role === "user"
-                      ? "border-blue-500 bg-blue-50 text-blue-700"
+                      ? "border-[#FF5A1F] bg-[#FF5A1F]/10 text-[#FF5A1F] shadow-md"
                       : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
                   }`}
                 >
-                  <User className="w-5 h-5 mx-auto mb-2" />
-                  <span className="text-sm font-medium">Customer</span>
+                  <User className="w-6 h-6 mx-auto mb-2" />
+                  <span className="text-sm font-semibold">Customer</span>
                 </button>
                 <button
                   type="button"
                   onClick={() =>
                     setFormData((prev) => ({ ...prev, role: "barber" }))
                   }
-                  className={`p-3 rounded-xl border-2 transition-all duration-200 ${
+                  className={`p-4 rounded-xl border-2 transition-all duration-200 hover:scale-[1.02] ${
                     formData.role === "barber"
-                      ? "border-blue-500 bg-blue-50 text-blue-700"
+                      ? "border-[#FF5A1F] bg-[#FF5A1F]/10 text-[#FF5A1F] shadow-md"
                       : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
                   }`}
                 >
-                  <Scissors className="w-5 h-5 mx-auto mb-2" />
-                  <span className="text-sm font-medium">Barber</span>
+                  <Scissors className="w-6 h-6 mx-auto mb-2" />
+                  <span className="text-sm font-semibold">Barber</span>
                 </button>
               </div>
             </div>
@@ -156,7 +156,7 @@ export default function RegisterPage() {
                 value={formData.firstName}
                 onChange={handleChange}
                 required
-                placeholder="Enter first name"
+                placeholder="John"
               />
               <Input
                 label="Last Name"
@@ -165,7 +165,7 @@ export default function RegisterPage() {
                 value={formData.lastName}
                 onChange={handleChange}
                 required
-                placeholder="Enter last name"
+                placeholder="Doe"
               />
             </div>
 
@@ -178,7 +178,7 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                placeholder="Enter email address"
+                placeholder="john@example.com"
               />
               <Input
                 label="Phone"
@@ -187,7 +187,7 @@ export default function RegisterPage() {
                 value={formData.phone}
                 onChange={handleChange}
                 required
-                placeholder="Enter phone number"
+                placeholder="+1 234 567 8900"
               />
             </div>
 
@@ -206,7 +206,7 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-[calc(50%+12px)] transform -translate-y-1/2 p-2 text-gray-500 hover:text-gray-700 transition-colors touch-target rounded-lg hover:bg-gray-100"
+                  className="absolute right-3 top-[calc(50%+12px)] transform -translate-y-1/2 p-2 text-gray-500 hover:text-[#FF5A1F] transition-colors touch-target rounded-lg hover:bg-[#FF5A1F]/10"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? (
@@ -229,8 +229,10 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-[calc(50%+12px)] transform -translate-y-1/2 p-2 text-gray-500 hover:text-gray-700 transition-colors touch-target rounded-lg hover:bg-gray-100"
-                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  className="absolute right-3 top-[calc(50%+12px)] transform -translate-y-1/2 p-2 text-gray-500 hover:text-[#FF5A1F] transition-colors touch-target rounded-lg hover:bg-[#FF5A1F]/10"
+                  aria-label={
+                    showConfirmPassword ? "Hide password" : "Show password"
+                  }
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -257,7 +259,7 @@ export default function RegisterPage() {
               Already have an account?{" "}
               <Link
                 href="/auth/login"
-                className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
+                className="font-semibold text-[#FF5A1F] hover:text-[#E54D1A] transition-colors"
               >
                 Sign in here
               </Link>

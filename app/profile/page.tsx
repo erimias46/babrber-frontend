@@ -40,7 +40,8 @@ export default function ProfilePage() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("personal");
   const [showLocationPicker, setShowLocationPicker] = useState(false);
-  const [showMap, setShowMap] = useState(false);
+  const [showMap, setShowMap] = useState(true);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
@@ -81,6 +82,26 @@ export default function ProfilePage() {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to update location");
+    },
+  });
+
+  // Avatar upload mutation
+  const uploadAvatarMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append("avatar", file);
+      return api.uploadAvatar(formData);
+    },
+    onSuccess: () => {
+      toast.success("Avatar updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      // Refresh user data
+      api.getProfile().then((res) => {
+        updateUser(res.data.data);
+      });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to upload avatar");
     },
   });
 
@@ -150,6 +171,30 @@ export default function ProfilePage() {
     address?: string;
   }) => {
     updateLocationMutation.mutate(location);
+  };
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        toast.error("Please select an image file");
+        return;
+      }
+      // Validate file size (10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error("Image must be less than 10MB");
+        return;
+      }
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      // Upload
+      uploadAvatarMutation.mutate(file);
+    }
   };
 
   // Portfolio management (barber only)
@@ -246,27 +291,27 @@ export default function ProfilePage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 w-full overflow-x-hidden">
       <Navbar />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+      <main className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 w-full">
+        <div className="mb-4 sm:mb-6 lg:mb-8">
+          <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold text-[#111111]">
             Profile Settings
           </h1>
-          <p className="text-sm sm:text-base text-gray-600 mt-2">
+          <p className="text-xs sm:text-sm lg:text-base text-gray-600 mt-1 sm:mt-2">
             Manage your account information
           </p>
         </div>
 
         {/* Responsive tabs with horizontal scroll on mobile */}
-        <div className="flex gap-2 mb-6 sm:mb-8 overflow-x-auto scrollbar-hide pb-2">
+        <div className="flex gap-2 mb-4 sm:mb-6 lg:mb-8 overflow-x-auto scrollbar-hide pb-2 -mx-3 px-3 sm:mx-0 sm:px-0">
           <button
             onClick={() => setActiveTab("personal")}
-            className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
+            className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl font-semibold whitespace-nowrap transition-all border-2 ${
               activeTab === "personal"
-                ? "bg-primary-600 text-white"
-                : "bg-white text-gray-700 hover:bg-gray-50"
+                ? "bg-[#FF5A1F] text-white border-[#FF5A1F]"
+                : "bg-white text-gray-700 hover:bg-gray-50 border-gray-200"
             }`}
           >
             <User className="w-4 h-4" />
@@ -275,10 +320,10 @@ export default function ProfilePage() {
 
           <button
             onClick={() => setActiveTab("location")}
-            className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
+            className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl font-semibold whitespace-nowrap transition-all border-2 ${
               activeTab === "location"
-                ? "bg-primary-600 text-white"
-                : "bg-white text-gray-700 hover:bg-gray-50"
+                ? "bg-[#FF5A1F] text-white border-[#FF5A1F]"
+                : "bg-white text-gray-700 hover:bg-gray-50 border-gray-200"
             }`}
           >
             <MapPin className="w-4 h-4" />
@@ -288,10 +333,10 @@ export default function ProfilePage() {
           {user?.role === "barber" && (
             <button
               onClick={() => setActiveTab("business")}
-              className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
+              className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl font-semibold whitespace-nowrap transition-all border-2 ${
                 activeTab === "business"
-                  ? "bg-primary-600 text-white"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
+                  ? "bg-[#FF5A1F] text-white border-[#FF5A1F]"
+                  : "bg-white text-gray-700 hover:bg-gray-50 border-gray-200"
               }`}
             >
               <Briefcase className="w-4 h-4" />
@@ -302,8 +347,8 @@ export default function ProfilePage() {
 
         <form onSubmit={handleSubmit}>
           {activeTab === "personal" && (
-            <Card className="p-4 sm:p-6">
-              <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6">
+            <Card className="p-4 sm:p-6 border-2 border-gray-100 shadow-lg">
+              <h2 className="text-lg sm:text-xl font-bold text-[#111111] mb-4 sm:mb-6">
                 Personal Information
               </h2>
 
@@ -341,11 +386,68 @@ export default function ProfilePage() {
                 />
               </div>
 
-              <div className="mt-4 sm:mt-6 text-center py-6 sm:py-8 text-gray-500 bg-gray-50 rounded-lg">
-                <Image className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 text-gray-300" />
-                <p className="text-xs sm:text-sm">
-                  Avatar upload temporarily disabled
-                </p>
+              {/* Avatar Upload */}
+              <div className="mt-4 sm:mt-6">
+                <label className="block text-sm font-semibold text-[#111111] mb-2">
+                  Profile Picture
+                </label>
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  {/* Avatar Display */}
+                  <div className="relative">
+                    <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-[#FF5A1F]/10 border-4 border-[#FF5A1F]/20 flex items-center justify-center shadow-lg">
+                      {avatarPreview || user?.avatar ? (
+                        <img
+                          src={avatarPreview || resolveImageUrl(user?.avatar)}
+                          alt="Profile"
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = "none";
+                            target.parentElement!.innerHTML = `
+                              <div class="w-full h-full flex items-center justify-center bg-gray-200">
+                                <span class="text-3xl sm:text-4xl text-gray-500 font-bold">
+                                  ${user?.firstName?.[0] || "?"}${
+                              user?.lastName?.[0] || ""
+                            }
+                                </span>
+                              </div>
+                            `;
+                          }}
+                        />
+                      ) : (
+                        <div className="text-3xl sm:text-4xl text-gray-400 font-bold">
+                          {user?.firstName?.[0] || "?"}
+                          {user?.lastName?.[0] || ""}
+                        </div>
+                      )}
+                    </div>
+                    {uploadAvatarMutation.isPending && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Upload Button */}
+                  <div className="flex flex-col gap-2 text-center sm:text-left">
+                    <label className="inline-flex items-center justify-center px-4 py-2.5 bg-[#FF5A1F] hover:bg-[#E54D1A] text-white rounded-xl cursor-pointer transition-colors text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-md">
+                      <User className="w-4 h-4 mr-2" />
+                      {uploadAvatarMutation.isPending
+                        ? "Uploading..."
+                        : "Upload Photo"}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleAvatarChange}
+                        disabled={uploadAvatarMutation.isPending}
+                      />
+                    </label>
+                    <p className="text-xs text-gray-600 font-medium">
+                      JPG, PNG or GIF (max 10MB)
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div className="mt-4 sm:mt-6">
@@ -363,9 +465,9 @@ export default function ProfilePage() {
           {activeTab === "location" && (
             <div className="space-y-4 sm:space-y-6">
               {/* Location Management */}
-              <Card className="p-4 sm:p-6">
+              <Card className="p-4 sm:p-6 border-2 border-gray-100 shadow-lg">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
-                  <h2 className="text-lg sm:text-xl font-semibold">
+                  <h2 className="text-lg sm:text-xl font-bold text-[#111111]">
                     Location Settings
                   </h2>
                   <Button
@@ -379,14 +481,14 @@ export default function ProfilePage() {
 
                 <div className="space-y-3 sm:space-y-4">
                   {user?.location ? (
-                    <div className="bg-green-50 p-3 sm:p-4 rounded-lg border border-green-200">
+                    <div className="bg-green-50 p-3 sm:p-4 rounded-xl border-2 border-green-200">
                       <div className="flex items-start gap-2 sm:gap-3">
                         <MapPin className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-green-900 text-sm sm:text-base">
+                          <h3 className="font-semibold text-green-900 text-sm sm:text-base">
                             Current Location
                           </h3>
-                          <p className="text-xs sm:text-sm text-green-700 mt-1 break-words">
+                          <p className="text-xs sm:text-sm text-green-700 mt-1 break-words font-medium">
                             {user?.location.address ||
                               `${user?.location.coordinates[1].toFixed(
                                 6
@@ -396,14 +498,14 @@ export default function ProfilePage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-yellow-50 p-3 sm:p-4 rounded-lg border border-yellow-200">
+                    <div className="bg-yellow-50 p-3 sm:p-4 rounded-xl border-2 border-yellow-200">
                       <div className="flex items-start gap-2 sm:gap-3">
                         <Navigation className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-yellow-900 text-sm sm:text-base">
+                          <h3 className="font-semibold text-yellow-900 text-sm sm:text-base">
                             No Location Set
                           </h3>
-                          <p className="text-xs sm:text-sm text-yellow-700 mt-1">
+                          <p className="text-xs sm:text-sm text-yellow-700 mt-1 font-medium">
                             {user?.role === "barber"
                               ? "Set your location to receive nearby customer requests"
                               : "Set your location to find nearby barbers and get accurate transportation fees"}
@@ -429,25 +531,27 @@ export default function ProfilePage() {
                   </div>
 
                   {showMap && user?.location && (
-                    <InteractiveMap
-                      center={[
-                        user?.location.coordinates[1],
-                        user?.location.coordinates[0],
-                      ]}
-                      markers={[
-                        {
-                          id: "user",
-                          position: [
-                            user?.location.coordinates[1],
-                            user?.location.coordinates[0],
-                          ],
-                          title: "Your Location",
-                          type: user?.role === "barber" ? "barber" : "user",
-                        },
-                      ]}
-                      height="400px"
-                      className="rounded-lg border"
-                    />
+                    <div className="w-full h-[300px] sm:h-[400px]">
+                      <InteractiveMap
+                        center={[
+                          user?.location.coordinates[1],
+                          user?.location.coordinates[0],
+                        ]}
+                        markers={[
+                          {
+                            id: "user",
+                            position: [
+                              user?.location.coordinates[1],
+                              user?.location.coordinates[0],
+                            ],
+                            title: "Your Location",
+                            type: user?.role === "barber" ? "barber" : "user",
+                          },
+                        ]}
+                        height="100%"
+                        className="rounded-lg border w-full h-full"
+                      />
+                    </div>
                   )}
                 </div>
               </Card>
@@ -457,8 +561,8 @@ export default function ProfilePage() {
           {activeTab === "business" && user?.role === "barber" && (
             <div className="space-y-4 sm:space-y-8">
               {/* Business Info */}
-              <Card className="p-4 sm:p-6">
-                <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6">
+              <Card className="p-4 sm:p-6 border-2 border-gray-100 shadow-lg">
+                <h2 className="text-lg sm:text-xl font-bold text-[#111111] mb-4 sm:mb-6">
                   Business Information
                 </h2>
 
@@ -479,17 +583,19 @@ export default function ProfilePage() {
                       value={formData.profileDescription}
                       onChange={handleInputChange}
                       rows={4}
-                      className="input"
+                      className="input w-full resize-y"
                       placeholder="Tell customers about yourself and your experience..."
                     />
                   </div>
 
                   {/* Stripe Connect */}
-                  <div className="border rounded-lg p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="font-medium">Stripe Connect</h3>
-                        <p className="text-sm text-gray-600">
+                  <div className="border-2 border-gray-200 rounded-xl p-3 sm:p-4 bg-gray-50">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-sm sm:text-base text-[#111111]">
+                          Stripe Connect
+                        </h3>
+                        <p className="text-xs sm:text-sm text-gray-600 break-words font-medium">
                           {user?.stripeAccountId
                             ? `Connected: ${user?.stripeAccountId}`
                             : "Not connected"}
@@ -515,6 +621,7 @@ export default function ProfilePage() {
                               );
                             }
                           }}
+                          className="w-full sm:w-auto whitespace-nowrap"
                         >
                           Connect with Stripe
                         </Button>
@@ -523,8 +630,8 @@ export default function ProfilePage() {
                   </div>
 
                   {/* Deposit Settings */}
-                  <div className="border rounded-lg p-3 sm:p-4">
-                    <h3 className="font-medium text-sm sm:text-base mb-3">
+                  <div className="border-2 border-gray-200 rounded-xl p-3 sm:p-4 bg-gray-50">
+                    <h3 className="font-semibold text-sm sm:text-base mb-3 text-[#111111]">
                       Deposit Settings
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
@@ -602,9 +709,10 @@ export default function ProfilePage() {
               </Card>
 
               {/* File uploads for barbers */}
-              <Card className="p-4 sm:p-6">
-                <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 flex items-center">
-                  <Image className="w-5 h-5 mr-2" /> Portfolio & Documents
+              <Card className="p-4 sm:p-6 border-2 border-gray-100 shadow-lg">
+                <h2 className="text-lg sm:text-xl font-bold text-[#111111] mb-4 sm:mb-6 flex items-center">
+                  <Image className="w-5 h-5 mr-2 text-[#FF5A1F]" /> Portfolio &
+                  Documents
                 </h2>
                 {/* Portfolio Upload */}
                 <div className="space-y-3 sm:space-y-4">
@@ -614,7 +722,7 @@ export default function ProfilePage() {
                         Upload up to a few images showcasing your work
                       </p>
                     </div>
-                    <label className="inline-flex items-center px-3 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-md cursor-pointer text-sm w-full sm:w-auto justify-center whitespace-nowrap">
+                    <label className="inline-flex items-center px-3 py-2.5 bg-[#FF5A1F] hover:bg-[#E54D1A] text-white rounded-xl cursor-pointer text-sm font-semibold w-full sm:w-auto justify-center whitespace-nowrap shadow-md transition-all">
                       <Plus className="w-4 h-4 mr-2" /> Upload Images
                       <input
                         type="file"
@@ -642,7 +750,7 @@ export default function ProfilePage() {
                       {myPortfolio.map((file: any) => (
                         <div
                           key={file._id}
-                          className="group relative aspect-square rounded-lg overflow-hidden border"
+                          className="group relative aspect-square rounded-xl overflow-hidden border-2 border-gray-200 shadow-md hover:shadow-lg transition-shadow"
                         >
                           <img
                             src={resolveImageUrl(file.url)}
@@ -658,7 +766,7 @@ export default function ProfilePage() {
                           <button
                             type="button"
                             onClick={() => deleteFileMutation.mutate(file._id)}
-                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition bg-white/90 hover:bg-white text-gray-800 rounded-full p-1 shadow"
+                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg"
                             aria-label="Delete"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -670,10 +778,10 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Documents Upload */}
-                <div className="mt-6 sm:mt-8 pt-6 border-t border-gray-200">
+                <div className="mt-6 sm:mt-8 pt-6 border-t-2 border-gray-200">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 gap-3">
                     <div>
-                      <h3 className="text-base sm:text-lg font-medium text-gray-900">
+                      <h3 className="text-base sm:text-lg font-bold text-[#111111]">
                         Verification Documents
                       </h3>
                       <p className="text-xs sm:text-sm text-gray-600">
@@ -681,7 +789,7 @@ export default function ProfilePage() {
                         verification
                       </p>
                     </div>
-                    <label className="inline-flex items-center px-3 py-2 bg-green-600 hover:bg-green-500 text-white rounded-md cursor-pointer text-sm w-full sm:w-auto justify-center whitespace-nowrap">
+                    <label className="inline-flex items-center px-3 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl cursor-pointer text-sm font-semibold w-full sm:w-auto justify-center whitespace-nowrap shadow-md transition-all">
                       <Plus className="w-4 h-4 mr-2" /> Upload Documents
                       <input
                         type="file"
@@ -708,39 +816,39 @@ export default function ProfilePage() {
                       {myDocuments.map((file: any) => (
                         <div
                           key={file._id}
-                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border"
+                          className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-white rounded-xl border-2 border-gray-200 shadow-sm hover:shadow-md transition-shadow gap-3"
                         >
-                          <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <div className="flex items-center space-x-3 min-w-0 flex-1">
+                            <div className="w-10 h-10 bg-[#FF5A1F]/10 rounded-lg flex items-center justify-center flex-shrink-0 border border-[#FF5A1F]/20">
                               {file.mimetype.includes("pdf") ? (
-                                <span className="text-blue-600 font-bold text-sm">
+                                <span className="text-[#FF5A1F] font-bold text-xs">
                                   PDF
                                 </span>
                               ) : file.mimetype.includes("doc") ? (
-                                <span className="text-blue-600 font-bold text-sm">
+                                <span className="text-[#FF5A1F] font-bold text-xs">
                                   DOC
                                 </span>
                               ) : (
-                                <span className="text-blue-600 font-bold text-sm">
+                                <span className="text-[#FF5A1F] font-bold text-xs">
                                   IMG
                                 </span>
                               )}
                             </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-semibold text-[#111111] truncate">
                                 {file.originalName}
                               </p>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-xs text-gray-600 font-medium">
                                 {(file.size / 1024 / 1024).toFixed(2)} MB
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
                             <a
                               href={file.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                              className="text-[#FF5A1F] hover:text-[#E54D1A] text-sm font-semibold whitespace-nowrap"
                             >
                               View
                             </a>
@@ -749,7 +857,7 @@ export default function ProfilePage() {
                               onClick={() =>
                                 deleteFileMutation.mutate(file._id)
                               }
-                              className="text-red-600 hover:text-red-800 text-sm font-medium"
+                              className="text-red-600 hover:text-red-700 text-sm font-semibold whitespace-nowrap"
                             >
                               Delete
                             </button>
@@ -762,9 +870,9 @@ export default function ProfilePage() {
               </Card>
 
               {/* Specialties */}
-              <Card className="p-4 sm:p-6">
+              <Card className="p-4 sm:p-6 border-2 border-gray-100 shadow-lg">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
-                  <h2 className="text-lg sm:text-xl font-semibold">
+                  <h2 className="text-lg sm:text-xl font-bold text-[#111111]">
                     Specialties
                   </h2>
                   <Button
@@ -779,19 +887,22 @@ export default function ProfilePage() {
 
                 <div className="space-y-2 sm:space-y-3">
                   {formData.specialties.map((specialty, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <Input
-                        value={specialty}
-                        onChange={(e) =>
-                          handleSpecialtyChange(index, e.target.value)
-                        }
-                        placeholder="e.g., Beard trimming, Hair coloring"
-                      />
+                    <div key={index} className="flex items-center gap-2">
+                      <div className="flex-1 min-w-0">
+                        <Input
+                          value={specialty}
+                          onChange={(e) =>
+                            handleSpecialtyChange(index, e.target.value)
+                          }
+                          placeholder="e.g., Beard trimming, Hair coloring"
+                        />
+                      </div>
                       <Button
                         type="button"
                         variant="danger"
                         size="sm"
                         onClick={() => handleSpecialtyRemove(index)}
+                        className="flex-shrink-0"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -801,9 +912,9 @@ export default function ProfilePage() {
               </Card>
 
               {/* Services */}
-              <Card className="p-4 sm:p-6">
+              <Card className="p-4 sm:p-6 border-2 border-gray-100 shadow-lg">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
-                  <h2 className="text-lg sm:text-xl font-semibold">
+                  <h2 className="text-lg sm:text-xl font-bold text-[#111111]">
                     Services & Pricing
                   </h2>
                   <Button
@@ -818,9 +929,12 @@ export default function ProfilePage() {
 
                 <div className="space-y-4 sm:space-y-6">
                   {formData.services.map((service, index) => (
-                    <div key={index} className="border rounded-lg p-3 sm:p-4">
+                    <div
+                      key={index}
+                      className="border-2 border-gray-200 rounded-xl p-3 sm:p-4 bg-gray-50"
+                    >
                       <div className="flex items-center justify-between mb-3 sm:mb-4">
-                        <h3 className="font-medium text-sm sm:text-base">
+                        <h3 className="font-semibold text-sm sm:text-base text-[#111111]">
                           Service {index + 1}
                         </h3>
                         <Button
@@ -888,7 +1002,7 @@ export default function ProfilePage() {
                             )
                           }
                           rows={2}
-                          className="input"
+                          className="input w-full resize-y"
                           placeholder="Describe what's included in this service..."
                         />
                       </div>
@@ -909,99 +1023,6 @@ export default function ProfilePage() {
             </div>
           )}
         </form>
-
-        {/* Debug Section */}
-        <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-gray-50 border border-gray-200 rounded-lg">
-          <h4 className="text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3">
-            Debug Information
-          </h4>
-          <div className="text-xs text-gray-600 space-y-1 sm:space-y-2">
-            <div className="truncate">
-              API Base URL:{" "}
-              {process.env.NEXT_PUBLIC_API_URL || "https://your-barber-backend-9364a99fcf71.herokuapp.com"}
-            </div>
-            <div>Environment: {process.env.NODE_ENV}</div>
-            <div className="truncate">
-              Timestamp: {new Date().toISOString()}
-            </div>
-            <div className="flex flex-wrap gap-2 mt-2">
-              <button
-                onClick={async () => {
-                  try {
-                    console.log("🧪 Testing Stripe connection...");
-                    const testRes = await apiClient.get("/stripe/test");
-                    const testData = testRes.data; // Fix: use .data for axios response
-                    console.log("🧪 Stripe test result:", testData);
-                    alert(
-                      `Stripe test: ${
-                        testData.success ? "SUCCESS" : "FAILED"
-                      }\n${testData.message}`
-                    );
-                  } catch (err) {
-                    console.error("🧪 Stripe test failed:", err);
-                    alert("Stripe test failed. Check console for details.");
-                  }
-                }}
-                className="text-blue-600 hover:text-blue-800 underline text-xs"
-              >
-                Test Stripe Connection
-              </button>
-              <button
-                onClick={async () => {
-                  try {
-                    console.log("🔍 Testing API endpoint reachability...");
-                    const testRes = await fetch(
-                      "https://your-barber-backend-9364a99fcf71.herokuapp.com/api/health"
-                    );
-                    const testData = await testRes.json();
-                    console.log("🔍 Health check result:", testData);
-                    alert(`Health check: ${testData.status}`);
-                  } catch (err) {
-                    console.error("🔍 Health check failed:", err);
-                    alert("Health check failed. Backend might be down.");
-                  }
-                }}
-                className="text-green-600 hover:text-green-800 underline text-xs"
-              >
-                Test Backend Health
-              </button>
-              <button
-                onClick={async () => {
-                  try {
-                    console.log("🔌 Testing connect/onboard endpoint...");
-                    const testRes = await fetch(
-                      "https://your-barber-backend-9364a99fcf71.herokuapp.com/api/connect/onboard",
-                      {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                          Authorization: `Bearer ${localStorage.getItem(
-                            "token"
-                          )}`,
-                        },
-                      }
-                    );
-                    const testData = await testRes.json();
-                    console.log("🔌 Connect/onboard test result:", testData);
-                    alert(
-                      `Connect/onboard test: ${
-                        testData.success ? "SUCCESS" : "FAILED"
-                      }\n${testData.message || "No message"}`
-                    );
-                  } catch (err) {
-                    console.error("🔌 Connect/onboard test failed:", err);
-                    alert(
-                      "Connect/onboard test failed. Check console for details."
-                    );
-                  }
-                }}
-                className="text-purple-600 hover:text-purple-800 underline text-xs"
-              >
-                Test Connect Endpoint
-              </button>
-            </div>
-          </div>
-        </div>
       </main>
 
       {/* Location Picker Modal */}

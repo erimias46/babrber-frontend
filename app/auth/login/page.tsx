@@ -63,13 +63,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md">
         {/* Back to Home Link */}
         <div className="text-center mb-6">
           <Link
             href="/"
-            className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors"
+            className="inline-flex items-center text-sm text-gray-600 hover:text-[#FF5A1F] transition-colors font-medium"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
@@ -78,19 +78,19 @@ export default function LoginPage() {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#FF5A1F] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
             <span className="text-2xl sm:text-3xl font-bold text-white">B</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#111111] mb-2">
             Welcome Back
           </h1>
           <p className="text-sm sm:text-base text-gray-600">
-            Sign in to your account
+            Sign in to your account to continue
           </p>
         </div>
 
         {/* Login Form */}
-        <Card className="p-6 sm:p-8">
+        <Card className="p-6 sm:p-8 shadow-xl border-2 border-gray-100">
           <form onSubmit={handleSubmit} className="form-stack">
             <Input
               label="Email"
@@ -98,7 +98,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="Enter your email"
+              placeholder="your.email@example.com"
             />
 
             <div className="relative">
@@ -113,7 +113,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-[calc(50%+12px)] transform -translate-y-1/2 p-2 text-gray-500 hover:text-gray-700 transition-colors touch-target rounded-lg hover:bg-gray-100"
+                className="absolute right-3 top-[calc(50%+12px)] transform -translate-y-1/2 p-2 text-gray-500 hover:text-[#FF5A1F] transition-colors touch-target rounded-lg hover:bg-[#FF5A1F]/10"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
@@ -124,14 +124,20 @@ export default function LoginPage() {
               </button>
             </div>
 
-            <Button type="submit" className="w-full" loading={loading}>
+            <Button
+              type="submit"
+              className="w-full"
+              loading={loading}
+              size="lg"
+            >
               Sign In
             </Button>
           </form>
 
           {/* Demo User Credentials */}
           <div className="mt-6 pt-6 border-t border-gray-200">
-            <h3 className="text-sm font-medium text-gray-700 mb-3">
+            <h3 className="text-sm font-semibold text-[#111111] mb-3 flex items-center">
+              <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
               Demo Accounts (Click to fill)
             </h3>
             <div className="space-y-2">
@@ -139,10 +145,10 @@ export default function LoginPage() {
                 <button
                   key={index}
                   onClick={() => fillMockCredentials(user.email, user.password)}
-                  className={`w-full p-3 rounded-lg border text-left transition-all duration-200 hover:scale-[1.02] ${user.color}`}
+                  className={`w-full p-3 rounded-xl border-2 text-left transition-all duration-200 hover:scale-[1.02] hover:shadow-md ${user.color}`}
                 >
-                  <div className="text-xs font-medium">{user.type}</div>
-                  <div className="text-xs opacity-75">{user.email}</div>
+                  <div className="text-xs font-semibold">{user.type}</div>
+                  <div className="text-xs opacity-80 mt-0.5">{user.email}</div>
                 </button>
               ))}
             </div>
@@ -154,7 +160,7 @@ export default function LoginPage() {
               Don't have an account?{" "}
               <Link
                 href="/auth/register"
-                className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
+                className="font-semibold text-[#FF5A1F] hover:text-[#E54D1A] transition-colors"
               >
                 Sign up here
               </Link>

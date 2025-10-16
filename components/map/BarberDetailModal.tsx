@@ -169,13 +169,19 @@ const BarberDetailModal = ({ barber, onClose }: BarberDetailModalProps) => {
             <X size={24} />
           </button>
           <div className="flex items-center space-x-4 relative z-10">
-            <div className="w-16 h-16 rounded-full border-4 border-gray-600/50 bg-gradient-to-br from-gray-700 to-gray-800 shadow-2xl relative">
+            <div className="w-16 h-16 rounded-full border-4 border-gray-600/50 bg-gradient-to-br from-gray-700 to-gray-800 shadow-2xl relative overflow-hidden">
               <div className="w-full h-full flex items-center justify-center text-3xl relative z-10">
-                {barber.profilePicture ? (
+                {barber.profilePicture || barber.avatar ? (
                   <img
-                    src={barber.profilePicture}
+                    src={resolveImageUrl(
+                      barber.profilePicture || barber.avatar
+                    )}
                     alt={barber.firstName}
                     className="w-full h-full object-cover rounded-full"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = "none";
+                    }}
                   />
                 ) : (
                   "👨‍🦲"
