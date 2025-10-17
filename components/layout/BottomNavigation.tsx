@@ -156,12 +156,30 @@ export function BottomNavigation() {
         </Link>
 
         {/* Notifications */}
-        <div className="flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200">
-          <NotificationsBell />
-          <span className="text-xs font-medium text-gray-600 mt-1">
+        <Link
+          href="/notifications"
+          className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 ${
+            isActive("/notifications")
+              ? "bg-[#FF5A1F]/10 text-[#FF5A1F]"
+              : "text-gray-600 hover:text-gray-900"
+          }`}
+        >
+          <div className="relative">
+            <Bell
+              className={`w-5 h-5 mb-1 ${
+                isActive("/notifications") ? "text-[#FF5A1F]" : ""
+              }`}
+            />
+            {/* We'll add unread count badge here if needed */}
+          </div>
+          <span
+            className={`text-xs font-medium ${
+              isActive("/notifications") ? "text-[#FF5A1F]" : ""
+            }`}
+          >
             Notifications
           </span>
-        </div>
+        </Link>
 
         {/* Profile */}
         <Link

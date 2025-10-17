@@ -97,16 +97,16 @@ export default function NotificationsPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-3xl lg:text-4xl font-bold text-[#111111]">
                 Notifications
               </h1>
-              <p className="text-gray-600 mt-2">
+              <p className="text-gray-600 mt-2 font-medium">
                 Stay updated with your latest activities and updates
               </p>
             </div>
             <div className="flex items-center space-x-3">
               {unreadCount > 0 && (
-                <span className="bg-red-100 text-red-800 text-sm font-medium px-3 py-1 rounded-full">
+                <span className="bg-red-100 text-red-800 text-sm font-semibold px-3 py-1 rounded-full border border-red-200">
                   {unreadCount} unread
                 </span>
               )}
@@ -115,6 +115,7 @@ export default function NotificationsPage() {
                 disabled={unreadCount === 0}
                 variant="secondary"
                 size="sm"
+                className="border-2"
               >
                 <CheckCheck className="w-4 h-4 mr-2" />
                 Mark All Read
@@ -123,30 +124,38 @@ export default function NotificationsPage() {
           </div>
         </div>
 
-        <Card>
+        <Card className="border-2 border-gray-100 shadow-lg">
           {isLoading ? (
             <div className="p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
-              <p className="text-gray-500 mt-2">Loading notifications...</p>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF5A1F] mx-auto"></div>
+              <p className="text-gray-500 mt-2 font-medium">
+                Loading notifications...
+              </p>
             </div>
           ) : notifications?.notifications?.length === 0 ? (
             <div className="p-8 text-center">
-              <Bell className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <div className="w-16 h-16 bg-[#FF5A1F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Bell className="w-8 h-8 text-[#FF5A1F]" />
+              </div>
+              <h3 className="text-lg font-bold text-[#111111] mb-2">
                 No notifications yet
               </h3>
-              <p className="text-gray-500">
+              <p className="text-gray-600 font-medium">
                 You're all caught up! Check back later for updates.
               </p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-200">
+            <div className="divide-y-2 divide-gray-200">
               {notifications?.notifications?.map((notification) => (
                 <div
                   key={notification._id}
                   className={`p-6 hover:bg-gray-50 transition-colors duration-200 border-l-4 ${getPriorityColor(
                     notification.priority
-                  )} ${!notification.isRead ? "bg-white" : ""}`}
+                  )} ${
+                    !notification.isRead
+                      ? "bg-white border-2 border-gray-100"
+                      : ""
+                  }`}
                 >
                   <div className="flex items-start space-x-4">
                     <div className="flex-shrink-0 mt-1">
@@ -157,26 +166,26 @@ export default function NotificationsPage() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <h3
-                            className={`text-sm font-medium ${
+                            className={`text-sm font-semibold ${
                               notification.isRead
                                 ? "text-gray-600"
-                                : "text-gray-900"
+                                : "text-[#111111]"
                             }`}
                           >
                             {notification.title}
                           </h3>
                           {!notification.isRead && (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-[#FF5A1F]/10 text-[#FF5A1F] border border-[#FF5A1F]/20">
                               New
                             </span>
                           )}
                           <span
-                            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border ${
                               notification.priority === "high"
-                                ? "bg-red-100 text-red-800"
+                                ? "bg-red-100 text-red-800 border-red-200"
                                 : notification.priority === "medium"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-blue-100 text-blue-800"
+                                ? "bg-yellow-100 text-yellow-800 border-yellow-200"
+                                : "bg-blue-100 text-blue-800 border-blue-200"
                             }`}
                           >
                             {notification.priority}
@@ -184,7 +193,7 @@ export default function NotificationsPage() {
                         </div>
 
                         <div className="flex items-center space-x-2">
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-gray-600 font-medium">
                             {new Date(
                               notification.createdAt
                             ).toLocaleDateString()}
@@ -195,7 +204,7 @@ export default function NotificationsPage() {
                                 onClick={() => markAsRead(notification._id)}
                                 variant="secondary"
                                 size="sm"
-                                className="h-8 w-8 p-0 hover:bg-gray-100"
+                                className="h-8 w-8 p-0 hover:bg-gray-100 border"
                               >
                                 <Check className="w-4 h-4 text-gray-600" />
                               </Button>
@@ -204,7 +213,7 @@ export default function NotificationsPage() {
                               onClick={() => handleDelete(notification._id)}
                               variant="secondary"
                               size="sm"
-                              className="h-8 w-8 p-0 hover:bg-red-100 hover:text-red-600"
+                              className="h-8 w-8 p-0 hover:bg-red-100 hover:text-red-600 border"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
@@ -213,7 +222,7 @@ export default function NotificationsPage() {
                       </div>
 
                       <p
-                        className={`mt-2 text-sm ${
+                        className={`mt-2 text-sm font-medium ${
                           notification.isRead
                             ? "text-gray-500"
                             : "text-gray-700"
@@ -223,8 +232,8 @@ export default function NotificationsPage() {
                       </p>
 
                       {notification.data && (
-                        <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-                          <pre className="text-xs text-gray-600 overflow-x-auto">
+                        <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                          <pre className="text-xs text-gray-600 overflow-x-auto font-medium">
                             {JSON.stringify(notification.data, null, 2)}
                           </pre>
                         </div>
