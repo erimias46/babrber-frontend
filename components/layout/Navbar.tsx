@@ -9,17 +9,14 @@ import {
   MapPin,
   Settings,
   LogOut,
-  Bell,
   MessageCircle,
-  Menu,
   Star,
-  X,
 } from "lucide-react";
 import { useState } from "react";
 import { NotificationsBell } from "@/components/layout/NotificationsBell";
+import { BottomNavigation } from "@/components/layout/BottomNavigation";
 import { useChat } from "@/lib/hooks/useChat";
 import { Chat } from "@/types";
-import { useEffect } from "react";
 import { API_ORIGIN } from "@/lib/api/client";
 
 const resolveImageUrl = (url?: string) => {
@@ -34,20 +31,7 @@ export function Navbar() {
   const { user, logout } = useAuth();
   const pathname = usePathname();
   const [showDropdown, setShowDropdown] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { chats } = useChat();
-
-  // Lock body scroll when mobile menu is open
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [mobileMenuOpen]);
 
   if (!user) return null;
 
@@ -316,61 +300,16 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Mobile Hamburger */}
+          {/* Mobile - Only show user avatar and notifications */}
           <div className="md:hidden flex items-center space-x-2">
-            {/* Chat Icon for Mobile */}
-            <Link
-              href="/chat"
-              className="relative p-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all duration-200"
-            >
-              <MessageCircle className="w-5 h-5 text-gray-700" />
-              {totalUnreadMessages > 0 && (
-                <span className="absolute -top-1 -right-1 text-[10px] px-1.5 py-0.5 rounded-full bg-red-600 text-white font-semibold">
-                  {totalUnreadMessages > 9 ? "9+" : totalUnreadMessages}
-                </span>
-              )}
-            </Link>
             {/* Notifications Bell for Mobile */}
             <NotificationsBell />
-            {/* Menu Button */}
+            {/* User Avatar */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all duration-200"
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              onClick={() => setShowDropdown(!showDropdown)}
+              className="flex items-center p-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all duration-200"
             >
-              {mobileMenuOpen ? (
-                <X className="w-6 h-6 text-gray-900" />
-              ) : (
-                <Menu className="w-6 h-6 text-gray-900" />
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Menu Overlay */}
-      {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
-          onClick={() => setMobileMenuOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Mobile Menu Panel */}
-      <div
-        className={`fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 md:hidden ${
-          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Mobile navigation"
-      >
-        <div className="p-6 h-full overflow-y-auto flex flex-col">
-          {/* Mobile Menu Header */}
-          <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-[#FF5A1F] rounded-full flex items-center justify-center overflow-hidden">
+              <div className="w-7 h-7 bg-[#FF5A1F] rounded-full flex items-center justify-center overflow-hidden">
                 {user.avatar ? (
                   <img
                     src={resolveImageUrl(user.avatar)}
@@ -382,216 +321,66 @@ export function Navbar() {
                     }}
                   />
                 ) : (
-                  <User className="w-5 h-5 text-white" />
+                  <User className="w-4 h-4 text-white" />
                 )}
               </div>
-              <div>
-                <div className="font-semibold text-gray-900">
-                  {user.firstName} {user.lastName}
-                </div>
-                <div className="text-sm text-gray-500 capitalize">
-                  {user.role} Account
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
-            >
-              <X className="w-5 h-5 text-gray-600" />
             </button>
-          </div>
-
-          {/* Mobile Menu Items */}
-          <div className="space-y-2 flex-1">
-            <Link
-              href={getDashboardLink()}
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center w-full p-4 rounded-xl transition-colors ${
-                pathname === getDashboardLink() ||
-                pathname === "/dashboard" ||
-                pathname === "/barber" ||
-                pathname === "/admin"
-                  ? "bg-[#FF5A1F]/10 hover:bg-[#FF5A1F]/20"
-                  : "bg-gray-50 hover:bg-gray-100"
-              }`}
-            >
-              <MapPin
-                className={`w-5 h-5 mr-3 ${
-                  pathname === getDashboardLink() ||
-                  pathname === "/dashboard" ||
-                  pathname === "/barber" ||
-                  pathname === "/admin"
-                    ? "text-[#FF5A1F]"
-                    : "text-gray-700"
-                }`}
-              />
-              <span
-                className={`font-semibold ${
-                  pathname === getDashboardLink() ||
-                  pathname === "/dashboard" ||
-                  pathname === "/barber" ||
-                  pathname === "/admin"
-                    ? "text-[#FF5A1F]"
-                    : "font-medium text-gray-900"
-                }`}
-              >
-                Dashboard
-              </span>
-            </Link>
-
-            {user.role === "user" && (
-              <Link
-                href="/requests"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`flex items-center w-full p-4 rounded-xl transition-colors ${
-                  pathname === "/requests"
-                    ? "bg-[#FF5A1F]/10 hover:bg-[#FF5A1F]/20"
-                    : "bg-gray-50 hover:bg-gray-100"
-                }`}
-              >
-                <Settings
-                  className={`w-5 h-5 mr-3 ${
-                    pathname === "/requests"
-                      ? "text-[#FF5A1F]"
-                      : "text-gray-700"
-                  }`}
-                />
-                <span
-                  className={`${
-                    pathname === "/requests"
-                      ? "font-semibold text-[#FF5A1F]"
-                      : "font-medium text-gray-900"
-                  }`}
+            {showDropdown && (
+              <div className="absolute right-4 mt-3 w-64 bg-white rounded-2xl shadow-xl py-2 z-50 border-2 border-gray-100 top-full">
+                <div className="px-4 py-3 border-b border-gray-200">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 bg-[#FF5A1F] rounded-full flex items-center justify-center overflow-hidden">
+                      {user.avatar ? (
+                        <img
+                          src={resolveImageUrl(user.avatar)}
+                          alt={user.firstName}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = "none";
+                          }}
+                        />
+                      ) : (
+                        <User className="w-6 h-6 text-white" />
+                      )}
+                    </div>
+                    <div>
+                      <div className="font-semibold text-gray-900">
+                        {user.firstName} {user.lastName}
+                      </div>
+                      <div className="text-sm text-gray-500">{user.email}</div>
+                      <div className="text-xs text-gray-400 capitalize">
+                        {user.role} Account
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <Link
+                  href="/profile"
+                  className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 rounded-xl mx-2"
+                  onClick={() => setShowDropdown(false)}
                 >
-                  My Requests
-                </span>
-              </Link>
+                  <Settings className="w-4 h-4 mr-3 text-gray-600" />
+                  Profile Settings
+                </Link>
+                <button
+                  onClick={() => {
+                    logout();
+                    setShowDropdown(false);
+                  }}
+                  className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200 rounded-xl mx-2"
+                >
+                  <LogOut className="w-4 h-4 mr-3" />
+                  Logout
+                </button>
+              </div>
             )}
-
-            <Link
-              href="/reviews"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center w-full p-4 rounded-xl transition-colors ${
-                pathname === "/reviews"
-                  ? "bg-[#FF5A1F]/10 hover:bg-[#FF5A1F]/20"
-                  : "bg-gray-50 hover:bg-gray-100"
-              }`}
-            >
-              <Star
-                className={`w-5 h-5 mr-3 ${
-                  pathname === "/reviews" ? "text-[#FF5A1F]" : "text-gray-700"
-                }`}
-              />
-              <span
-                className={`${
-                  pathname === "/reviews"
-                    ? "font-semibold text-[#FF5A1F]"
-                    : "font-medium text-gray-900"
-                }`}
-              >
-                Reviews
-              </span>
-            </Link>
-
-            <Link
-              href="/chat"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center w-full p-4 rounded-xl transition-colors relative ${
-                pathname === "/chat"
-                  ? "bg-[#FF5A1F]/10 hover:bg-[#FF5A1F]/20"
-                  : "bg-gray-50 hover:bg-gray-100"
-              }`}
-            >
-              <MessageCircle
-                className={`w-5 h-5 mr-3 ${
-                  pathname === "/chat" ? "text-[#FF5A1F]" : "text-gray-700"
-                }`}
-              />
-              <span
-                className={`${
-                  pathname === "/chat"
-                    ? "font-semibold text-[#FF5A1F]"
-                    : "font-medium text-gray-900"
-                }`}
-              >
-                Chat
-              </span>
-              {totalUnreadMessages > 0 && (
-                <span className="ml-auto text-xs px-2 py-1 rounded-full bg-red-600 text-white font-semibold">
-                  {totalUnreadMessages > 9 ? "9+" : totalUnreadMessages}
-                </span>
-              )}
-            </Link>
-
-            <Link
-              href="/notifications"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center w-full p-4 rounded-xl transition-colors ${
-                pathname === "/notifications"
-                  ? "bg-[#FF5A1F]/10 hover:bg-[#FF5A1F]/20"
-                  : "bg-gray-50 hover:bg-gray-100"
-              }`}
-            >
-              <Bell
-                className={`w-5 h-5 mr-3 ${
-                  pathname === "/notifications"
-                    ? "text-[#FF5A1F]"
-                    : "text-gray-700"
-                }`}
-              />
-              <span
-                className={`${
-                  pathname === "/notifications"
-                    ? "font-semibold text-[#FF5A1F]"
-                    : "font-medium text-gray-900"
-                }`}
-              >
-                Notifications
-              </span>
-            </Link>
-          </div>
-
-          {/* Mobile Menu Footer */}
-          <div className="mt-6 pt-6 border-t border-gray-200 space-y-2">
-            <Link
-              href="/profile"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center w-full p-4 rounded-xl transition-colors ${
-                pathname === "/profile"
-                  ? "bg-[#FF5A1F]/10 hover:bg-[#FF5A1F]/20"
-                  : "bg-gray-50 hover:bg-gray-100"
-              }`}
-            >
-              <Settings
-                className={`w-5 h-5 mr-3 ${
-                  pathname === "/profile" ? "text-[#FF5A1F]" : "text-gray-700"
-                }`}
-              />
-              <span
-                className={`${
-                  pathname === "/profile"
-                    ? "font-semibold text-[#FF5A1F]"
-                    : "font-medium text-gray-900"
-                }`}
-              >
-                Profile Settings
-              </span>
-            </Link>
-
-            <button
-              onClick={() => {
-                logout();
-                setMobileMenuOpen(false);
-              }}
-              className="flex items-center w-full p-4 rounded-xl bg-red-50 hover:bg-red-100 transition-colors"
-            >
-              <LogOut className="w-5 h-5 mr-3 text-red-600" />
-              <span className="font-semibold text-red-600">Logout</span>
-            </button>
           </div>
         </div>
       </div>
+
+      {/* Bottom Navigation for Mobile */}
+      <BottomNavigation />
     </nav>
   );
 }

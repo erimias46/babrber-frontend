@@ -504,25 +504,25 @@ export default function BarberDashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 overflow-x-auto">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#111111]">
               Barber Dashboard
             </h1>
-            <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">
+            <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base font-medium">
               Manage your requests and availability
             </p>
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-4">
             <div
-              className={`flex items-center px-3 py-2 rounded-lg ${
+              className={`flex items-center px-3 py-2 rounded-xl border-2 font-semibold ${
                 isOnline
-                  ? "bg-green-100 text-green-800"
-                  : "bg-gray-100 text-gray-800"
+                  ? "bg-green-50 text-green-800 border-green-200"
+                  : "bg-gray-50 text-gray-800 border-gray-200"
               }`}
             >
               <div
                 className={`w-2 h-2 rounded-full mr-2 ${
-                  isOnline ? "bg-green-400" : "bg-gray-400"
+                  isOnline ? "bg-green-500" : "bg-gray-400"
                 }`}
               ></div>
               {isOnline ? "Online" : "Offline"}
@@ -530,15 +530,15 @@ export default function BarberDashboard() {
 
             {/* Location Tracking Status */}
             <div
-              className={`flex items-center px-3 py-2 rounded-lg ${
+              className={`flex items-center px-3 py-2 rounded-xl border-2 font-semibold ${
                 isTracking
-                  ? "bg-blue-100 text-blue-800"
-                  : "bg-gray-100 text-gray-800"
+                  ? "bg-[#FF5A1F]/10 text-[#FF5A1F] border-[#FF5A1F]/20"
+                  : "bg-gray-50 text-gray-800 border-gray-200"
               }`}
             >
               <div
                 className={`w-2 h-2 rounded-full mr-2 ${
-                  isTracking ? "bg-blue-400" : "bg-gray-400"
+                  isTracking ? "bg-[#FF5A1F]" : "bg-gray-400"
                 }`}
               ></div>
               {isTracking ? "Location Active" : "Location Inactive"}
@@ -563,13 +563,13 @@ export default function BarberDashboard() {
 
         {/* Navigation Tabs */}
         <div className="mb-6 sm:mb-8">
-          <div className="border-b border-gray-200">
+          <div className="border-b-2 border-gray-200">
             <nav className="-mb-px flex space-x-4 sm:space-x-8 overflow-x-auto scrollbar-hide">
               <button
                 onClick={() => setActiveTab("dashboard")}
-                className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
+                className={`py-3 px-2 border-b-2 font-semibold text-xs sm:text-sm whitespace-nowrap transition-all ${
                   activeTab === "dashboard"
-                    ? "border-primary-500 text-primary-600"
+                    ? "border-[#FF5A1F] text-[#FF5A1F] bg-[#FF5A1F]/5"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
@@ -579,9 +579,9 @@ export default function BarberDashboard() {
               </button>
               <button
                 onClick={() => setActiveTab("requests")}
-                className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
+                className={`py-3 px-2 border-b-2 font-semibold text-xs sm:text-sm whitespace-nowrap transition-all ${
                   activeTab === "requests"
-                    ? "border-primary-500 text-primary-600"
+                    ? "border-[#FF5A1F] text-[#FF5A1F] bg-[#FF5A1F]/5"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
@@ -590,16 +590,16 @@ export default function BarberDashboard() {
                 <span className="sm:hidden">Requests</span>
                 {requests?.filter((r: any) => r.status === "pending").length >
                   0 && (
-                  <span className="ml-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
+                  <span className="ml-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 font-semibold">
                     {requests.filter((r: any) => r.status === "pending").length}
                   </span>
                 )}
               </button>
               <button
                 onClick={() => setActiveTab("location")}
-                className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
+                className={`py-3 px-2 border-b-2 font-semibold text-xs sm:text-sm whitespace-nowrap transition-all ${
                   activeTab === "location"
-                    ? "border-primary-500 text-primary-600"
+                    ? "border-[#FF5A1F] text-[#FF5A1F] bg-[#FF5A1F]/5"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
@@ -609,9 +609,9 @@ export default function BarberDashboard() {
               </button>
               <button
                 onClick={() => setActiveTab("pricing")}
-                className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
+                className={`py-3 px-2 border-b-2 font-semibold text-xs sm:text-sm whitespace-nowrap transition-all ${
                   activeTab === "pricing"
-                    ? "border-primary-500 text-primary-600"
+                    ? "border-[#FF5A1F] text-[#FF5A1F] bg-[#FF5A1F]/5"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
@@ -621,9 +621,9 @@ export default function BarberDashboard() {
               </button>
               <button
                 onClick={() => setActiveTab("availability")}
-                className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
+                className={`py-3 px-2 border-b-2 font-semibold text-xs sm:text-sm whitespace-nowrap transition-all ${
                   activeTab === "availability"
-                    ? "border-primary-500 text-primary-600"
+                    ? "border-[#FF5A1F] text-[#FF5A1F] bg-[#FF5A1F]/5"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
@@ -633,9 +633,9 @@ export default function BarberDashboard() {
               </button>
               <button
                 onClick={() => setActiveTab("payments")}
-                className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
+                className={`py-3 px-2 border-b-2 font-semibold text-xs sm:text-sm whitespace-nowrap transition-all ${
                   activeTab === "payments"
-                    ? "border-primary-500 text-primary-600"
+                    ? "border-[#FF5A1F] text-[#FF5A1F] bg-[#FF5A1F]/5"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
@@ -652,38 +652,38 @@ export default function BarberDashboard() {
           <div className="space-y-4 sm:space-y-6 overflow-x-auto">
             {/* Enhanced Stats Cards - Only on Dashboard */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
-              <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+              <Card className="bg-green-50 border-2 border-green-200 shadow-lg">
                 <div className="flex items-center">
-                  <div className="bg-green-500 p-3 rounded-lg shadow-lg">
+                  <div className="bg-green-500 p-3 rounded-xl shadow-md">
                     <Wallet className="w-6 h-6 text-white" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm text-green-700 font-medium">
+                    <p className="text-sm text-green-700 font-semibold">
                       Total Earnings
                     </p>
                     <p className="text-2xl font-bold text-green-900">
                       ${stats.totalEarnings.toFixed(2)}
                     </p>
-                    <p className="text-xs text-green-600">
+                    <p className="text-xs text-green-600 font-medium">
                       +${stats.thisWeekEarnings.toFixed(2)} this week
                     </p>
                   </div>
                 </div>
               </Card>
 
-              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+              <Card className="bg-blue-50 border-2 border-blue-200 shadow-lg">
                 <div className="flex items-center">
-                  <div className="bg-blue-500 p-3 rounded-lg shadow-lg">
+                  <div className="bg-blue-500 p-3 rounded-xl shadow-md">
                     <Users className="w-6 h-6 text-white" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm text-blue-700 font-medium">
+                    <p className="text-sm text-blue-700 font-semibold">
                       Total Customers
                     </p>
                     <p className="text-2xl font-bold text-blue-900">
                       {stats.totalCustomers}
                     </p>
-                    <p className="text-xs text-blue-600">
+                    <p className="text-xs text-blue-600 font-medium">
                       {requests?.filter((r: any) => r.status === "pending")
                         .length || 0}{" "}
                       pending
@@ -692,19 +692,19 @@ export default function BarberDashboard() {
                 </div>
               </Card>
 
-              <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+              <Card className="bg-purple-50 border-2 border-purple-200 shadow-lg">
                 <div className="flex items-center">
-                  <div className="bg-purple-500 p-3 rounded-lg shadow-lg">
+                  <div className="bg-purple-500 p-3 rounded-xl shadow-md">
                     <CheckCircle className="w-6 h-6 text-white" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm text-purple-700 font-medium">
+                    <p className="text-sm text-purple-700 font-semibold">
                       Completion Rate
                     </p>
                     <p className="text-2xl font-bold text-purple-900">
                       {stats.completionRate}%
                     </p>
-                    <p className="text-xs text-purple-600">
+                    <p className="text-xs text-purple-600 font-medium">
                       {requests?.filter((r: any) => r.status === "completed")
                         .length || 0}{" "}
                       completed
@@ -713,19 +713,19 @@ export default function BarberDashboard() {
                 </div>
               </Card>
 
-              <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200">
+              <Card className="bg-yellow-50 border-2 border-yellow-200 shadow-lg">
                 <div className="flex items-center">
-                  <div className="bg-yellow-500 p-3 rounded-lg shadow-lg">
+                  <div className="bg-yellow-500 p-3 rounded-xl shadow-md">
                     <Star className="w-6 h-6 text-white" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm text-yellow-700 font-medium">
+                    <p className="text-sm text-yellow-700 font-semibold">
                       Rating
                     </p>
                     <p className="text-2xl font-bold text-yellow-900">
                       {stats.averageRating.toFixed(1)}
                     </p>
-                    <p className="text-xs text-yellow-600">
+                    <p className="text-xs text-yellow-600 font-medium">
                       {stats.responseTime} avg response
                     </p>
                   </div>
@@ -733,9 +733,9 @@ export default function BarberDashboard() {
               </Card>
             </div>
             {/* Quick Actions */}
-            <Card>
+            <Card className="border-2 border-gray-100 shadow-lg">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
-                <h2 className="text-lg sm:text-xl font-semibold">
+                <h2 className="text-lg sm:text-xl font-bold text-[#111111]">
                   Quick Actions
                 </h2>
                 <div className="flex items-center space-x-2">
